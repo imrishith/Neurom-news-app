@@ -1,0 +1,969 @@
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { MMKV } from "react-native-mmkv";
+import {
+  getStateArticles,
+  getLocalizedArticles,
+  getShortVideos,
+  getMagazines,
+  getCategories,
+  getBuzzContents,
+} from "../src/api/users/contentApi";
+import { API_CONFIG } from "../src/api/config/apiConfig";
+import { publicPolls } from "../src/api/publicapi/publicApi";
+
+const mmkv = new MMKV();
+const TEN_MIN = 1000 * 60 * 10;
+const FIVE_MIN = 1000 * 60 * 5;
+const LIMIT = 50;
+
+interface VideoCache {
+  items: any[];
+  cursor: string | null;
+  hasMore: boolean;
+  lastFetchedAt: number | null;
+}
+
+interface ContentState {
+  // Articles (legacy + new paginated cache)
+  articles: any[];
+  lastFetchedAt: number | null;
+  hasMore: boolean;
+  isFetching: boolean;
+  cursor: string | null;
+  // Per-category paginated cache
+  articlesByCategory: Record<string, VideoCache>;
+
+
+
+
+  // Category selection (GLOBAL)
+  selectedCategories: string[];
+  setSelectedCategories: (cats: string[]) => void;
+  toggleCategory: (catKey: string) => void;
+  clearCategories: () => void;
+
+
+
+  // Fetch/seed category cache (reset clears that category first)
+  fetchArticles: (
+    reset?: boolean,
+    category_id?: number,
+    endpoint?: "state-articles" | "articles",
+    location?: { district_id?: number; mandal_id?: number; village_id?: number },
+    is_trending?: boolean,
+    is_breaking?: boolean,
+  ) => Promise<void>;
+  // Cursor-based pagination (10 per page) per category
+  loadMoreArticles: (
+    category_id?: number | null,
+    endpoint?: "state-articles" | "articles",
+    location?: { district_id?: number; mandal_id?: number; village_id?: number },
+    is_breaking?: boolean,
+    is_trending?: boolean,
+  ) => Promise<void>;
+
+  videos: any[];
+  lastFetchedVideosAt: number | null;
+  fetchVideos: () => Promise<void>;
+  videosByCategory: Record<string, VideoCache>;
+  lastViewedIndexByCategory: Record<string, number>;
+  loadMoreVideos: (
+    categoryId?: number | null
+  ) => Promise<void>;
+  setLastViewedIndex: (categoryKey: string, index: number) => void;
+  // Save last viewed index specifically for Latest
+  setLastViewedLatest?: (index: number) => void;
+
+    // ✅ Buzz screen resume state
+  lastViewedBuzzIndex: number;
+  setLastViewedBuzzIndex: (index: number) => void;
+  
+  magazines: any[];
+  lastFetchedMagazinesAt: number | null;
+
+  fetchMagazines: (category_id?: number | null) => Promise<void>;
+  loadMoreMagazines: (category_id?: number | null) => Promise<void>;
+  magCursor: string | null;
+  magHasMore: boolean;
+
+  categories: any[];
+  lastFetchedCategoriesAt: number | null;
+  fetchCategories: () => Promise<void>;
+
+  buzzContents: any[];
+  lastFetchedBuzzAt: number | null;
+  fetchBuzzContents: (category_id?: number | null, reset?: boolean) => Promise<void>;
+  loadMoreBuzz: (category_id?: number | null) => Promise<void>;
+  buzzCursor: string | null;
+  buzzHasMore: boolean;
+
+  // Live Score
+  liveScore: any | null;
+  lastFetchedLiveScoreAt: number | null;
+  fetchLiveScore: () => Promise<void>;
+  // Hero sections
+  breakingNews: any[];
+  lastFetchedBreakingAt: number | null;
+  fetchBreakingNews: () => Promise<void>;
+  trendingNews: any[];
+  lastFetchedTrendingAt: number | null;
+  fetchTrendingNews: () => Promise<void>;
+  polls: any[];
+  lastFetchedPollsAt: number | null;
+  fetchPolls: () => Promise<void>;
+
+  exclusiveArticles: any[];
+  exclusiveVideos: any[];
+  lastFetchedExclusiveAt: number | null;
+  fetchExclusiveContent: () => Promise<void>;
+  loadMoreExclusiveVideos: () => Promise<void>;
+
+  
+}
+
+
+
+export const useContentStore = create<ContentState>()(
+  persist(
+    (set, get) => ({
+
+      // ========== GLOBAL CATEGORY SYNC ==========
+      selectedCategories: [],
+      setSelectedCategories: (cats) => set({ selectedCategories: cats }),
+      toggleCategory: (catKey) => {
+        const { selectedCategories } = get();
+        const updated = selectedCategories.includes(catKey)
+          ? selectedCategories.filter((c) => c !== catKey)
+          : [...selectedCategories, catKey];
+        set({ selectedCategories: updated });
+      },
+      clearCategories: () => set({ selectedCategories: [] }),
+      // ========== ARTICLES ==========
+      articles: [],
+      lastFetchedAt: null,
+      hasMore: true,
+      isFetching: false,
+      cursor: null,
+      articlesByCategory: {},
+      fetchArticles: async (
+  reset = false,
+  category_id?: number,
+  endpoint: "state-articles" | "articles" = "state-articles",
+  location?: { district_id?: number; mandal_id?: number; village_id?: number },
+  is_trending?: boolean,
+  is_breaking?: boolean
+) => {
+  const key = category_id
+    ? `cat:${category_id}`
+    : endpoint === "articles"
+    ? "state"
+    : "latest";
+
+  console.log("🟣 fetchArticles triggered →", {
+    reset,
+    category_id,
+    endpoint,
+    location,
+    is_trending,
+    is_breaking,
+    cacheKey: key,
+  });
+
+  const existing = get().articlesByCategory[key];
+  const fresh =
+    !reset &&
+    existing &&
+    Date.now() - (existing.lastFetchedAt ?? 0) < TEN_MIN &&
+    existing.items.length > 0;
+
+  if (fresh) {
+    console.log("⚡ Using cached data for key:", key, "→", existing.items.length, "articles");
+    set({
+      articles: existing.items,
+      cursor: existing.cursor,
+      hasMore: existing.hasMore,
+      isFetching: false,
+    });
+    return;
+  }
+
+  try {
+    set({ isFetching: true });
+
+    let res;
+    if (endpoint === "articles") {
+      console.log("🌐 Hitting localized endpoint:", `${API_CONFIG.baseUrl}/public/users/articles`, {
+        district_id: location?.district_id,
+        mandal_id: location?.mandal_id,
+        village_id: location?.village_id,
+        category_id,
+      });
+      res = await getLocalizedArticles(
+        {
+          district_id: location?.district_id,
+          mandal_id: location?.mandal_id,
+          village_id: location?.village_id,
+          category_id,
+        },
+        LIMIT
+      );
+    } else {
+      console.log("🌍 Hitting state endpoint:", `${API_CONFIG.baseUrl}/public/users/state-articles`, {
+        limit: LIMIT,
+        category_id,
+        is_breaking,
+        is_trending,
+        is_exclusive: false,
+      });
+      res = await getStateArticles(
+        LIMIT,
+        null,
+        category_id,
+        is_breaking,
+        is_trending,
+        false
+      );
+    }
+
+    console.log("✅ API Response status:", res?.success, "Items:", res?.data?.items?.length ?? 0);
+
+    if (res?.success && Array.isArray(res.data?.items)) {
+      const updated: VideoCache = {
+        items: res.data.items,
+        cursor: res.data?.nextCursor ?? null,
+        hasMore: Boolean(res.data?.nextCursor),
+        lastFetchedAt: Date.now(),
+      };
+
+      set((state) => ({
+        isFetching: false,
+        articles: updated.items,
+        cursor: updated.cursor,
+        hasMore: updated.hasMore,
+        articlesByCategory: { ...state.articlesByCategory, [key]: updated },
+      }));
+    } else {
+      console.warn("⚠️ Empty response for key:", key);
+      set({ isFetching: false, hasMore: false });
+    }
+  } catch (err) {
+    console.error("❌ fetchArticles error:", err);
+    set({ isFetching: false });
+  }
+},
+
+
+     loadMoreArticles: async (
+  category_id = null,
+  endpoint: "state-articles" | "articles" = "state-articles",
+  location?: { district_id?: number; mandal_id?: number; village_id?: number },
+  is_breaking?: boolean,
+  is_trending?: boolean
+) => {
+  const key = category_id
+    ? `cat:${category_id}`
+    : endpoint === "articles"
+    ? "state"
+    : "latest";
+
+  const existing: VideoCache = get().articlesByCategory[key] ?? {
+    items: [],
+    cursor: null,
+    hasMore: true,
+    lastFetchedAt: null,
+  };
+
+  if (!existing.hasMore || get().isFetching) {
+    console.log("⏩ Skipping loadMore — no more pages or already fetching:", {
+      key,
+      hasMore: existing.hasMore,
+      isFetching: get().isFetching,
+    });
+    return;
+  }
+
+  console.log("🟠 loadMoreArticles triggered →", {
+    category_id,
+    endpoint,
+    cursor: existing.cursor,
+    location,
+    is_breaking,
+    is_trending,
+    cacheKey: key,
+  });
+
+  try {
+    set({ isFetching: true });
+
+    let res;
+    if (endpoint === "articles") {
+      console.log("🌐 Hitting localized pagination:", `${API_CONFIG.baseUrl}/public/users/articles`, {
+        cursor: existing.cursor,
+        district_id: location?.district_id,
+        mandal_id: location?.mandal_id,
+        village_id: location?.village_id,
+        category_id,
+      });
+      res = await getLocalizedArticles(
+        {
+          district_id: location?.district_id,
+          mandal_id: location?.mandal_id,
+          village_id: location?.village_id,
+          category_id: category_id ?? undefined,
+        },
+        LIMIT
+      );
+    } else {
+      console.log("🌍 Hitting state pagination:", `${API_CONFIG.baseUrl}/public/users/state-articles`, {
+        limit: LIMIT,
+        cursor: existing.cursor,
+        category_id,
+        is_breaking,
+        is_trending,
+      });
+      res = await getStateArticles(
+        LIMIT,
+        existing.cursor,
+        category_id ?? undefined,
+        is_breaking,
+        is_trending,
+        false
+      );
+    }
+
+    console.log("✅ loadMore API result:", {
+      success: res?.success,
+      fetchedCount: res?.data?.items?.length ?? 0,
+      nextCursor: res?.data?.nextCursor,
+    });
+
+    if (res?.success && Array.isArray(res.data?.items)) {
+      const nextCursor = res.data?.nextCursor ?? null;
+      const mapped = res.data.items;
+
+      const seen = new Set(existing.items.map((b: any) => b.article_id));
+      const unique = mapped.filter((a: any) => !seen.has(a.article_id));
+
+      console.log("🧩 Merge summary:", {
+        prevCount: existing.items.length,
+        newFetched: mapped.length,
+        uniqueAdded: unique.length,
+        totalAfterMerge: existing.items.length + unique.length,
+      });
+
+      const updated: VideoCache = {
+        items: [...existing.items, ...unique],
+        cursor: nextCursor,
+        hasMore: Boolean(nextCursor),
+        lastFetchedAt: Date.now(),
+      };
+
+      set((state) => ({
+        isFetching: false,
+        articlesByCategory: { ...state.articlesByCategory, [key]: updated },
+        articles: updated.items,
+        cursor: updated.cursor,
+        hasMore: updated.hasMore,
+      }));
+    } else {
+      console.warn("⚠️ loadMoreArticles: No new items for key:", key);
+      set({ isFetching: false, hasMore: false });
+    }
+  } catch (err) {
+    console.error("❌ loadMoreArticles error:", err);
+    set({ isFetching: false });
+  }
+},
+
+
+
+      resetPagination: () =>
+        set({
+          articles: [],
+          cursor: null,
+          hasMore: true,
+          isFetching: false,
+        }),// ========== VIDEOS ==========
+      videos: [],
+      lastFetchedVideosAt: null,
+      fetchVideos: async (force = false) => {
+        const { lastFetchedVideosAt } = get();
+        const shouldRefetch =
+          force ||
+          !lastFetchedVideosAt ||
+          Date.now() - lastFetchedVideosAt > TEN_MIN ||
+          get().videos.length === 0;
+
+        if (!shouldRefetch) {
+          console.log("✅ Using cached videos:", get().videos.length);
+          return;
+        }
+
+        try {
+          console.log("🎥 Fetching short videos...");
+          // const netInfo = await NetInfo.fetch();
+          // const isFast =
+          //   netInfo.type === "wifi" ||
+          //   (netInfo.type === "cellular" &&
+          //     ["4g", "5g"].includes(netInfo.details?.cellularGeneration));
+
+          const res = await getShortVideos();
+
+         
+
+
+          if (res?.success && Array.isArray(res.data?.items)) {
+
+              console.log("✅ Videos API Response:", res.data.items.length, "videos fetched");
+            console.log("🎬 First video sample:", res.data.items?.[0]);
+        
+            
+            const mapped = res.data.items.map((item: any) => {
+              const variants = (item.media?.variants || {}) as Record<string, string>;
+              const preferred = ["480p", "360p", "720p", "240p"]; // favor lower memory first
+              const first = Object.values(variants)[0] || null;
+              const videoUrl = preferred.map((k) => variants[k]).find(Boolean) || first;
+
+              return {
+                _id: String(item.video_id),
+                video_id: item.video_id,
+                uri: videoUrl ? { uri: videoUrl } : null,
+                thumbnail: item.media?.thumbnail || null,
+
+                title_te: item.title_te,
+                title_en: item.title_en,
+                description_te: item.description_te,
+                description_en: item.description_en,
+
+                category_id: item.category_id,
+                category: {
+                  name_te: item.Category?.name_te,
+                  name_en: item.Category?.name_en,
+                },
+
+                hashtag: item.hashtag,
+                created_at: item.created_at,
+
+                stats: {
+                  likes_count: Number(item.stats?.likes_count || item.likes_count || 0),
+                  comments_count: Number(item.stats?.comments_count || 0),
+                  dislikes_count: Number(item.stats?.dislikes_count || 0),
+                  shares_count: Number(item.stats?.shares_count || 0),
+                  views_count: Number(item.stats?.views_count || item.views_count || 0),
+                  saves_count: Number(item.stats?.saves_count || 0),
+                },
+              };
+            });
+
+            set((state) => ({
+              videos: mapped,
+              lastFetchedVideosAt: Date.now(),
+              videosByCategory: {
+                ...state.videosByCategory,
+                [`all`]: {
+                  items: mapped,
+                  cursor: res.data?.nextCursor ?? null,
+                  hasMore: Boolean(res.data?.nextCursor),
+                  lastFetchedAt: Date.now(),
+                },
+              },
+            }));
+            console.log("🎥 Videos updated:", mapped.length);
+          }
+        } catch (err) {
+          console.error("❌ Error fetching videos:", err);
+        }
+      },
+      // ========== VIDEOS (Paginated Cache) ==========
+      videosByCategory: {},
+      lastViewedIndexByCategory: {},
+      setLastViewedIndex: (categoryKey, index) => {
+        set((state) => ({
+          lastViewedIndexByCategory: {
+            ...state.lastViewedIndexByCategory,
+            [categoryKey]: index,
+          },
+        }));
+      },
+      setLastViewedLatest: (index: number) => {
+        const key = `latest`;
+        set((state) => ({
+          lastViewedIndexByCategory: {
+            ...(state.lastViewedIndexByCategory || {}),
+            [key]: index,
+          },
+        }));
+      },
+      
+      // ✅ BUZZ last viewed page (persistent)
+      lastViewedBuzzIndex: 0,
+      setLastViewedBuzzIndex: (index: number) => set({ lastViewedBuzzIndex: index }),
+      // Fetch next 10 for a category using cursor-based pagination
+      loadMoreVideos: async (categoryId = null) => {
+        const key = `${categoryId ?? "all"}`;
+        const existing: VideoCache = get().videosByCategory[key] ?? {
+          items: [],
+          cursor: null,
+          hasMore: true,
+          lastFetchedAt: null,
+        };
+
+        // If cache is fresh and already has some items and no cursor (initial page already loaded recently), skip API
+        if (
+          existing.items.length > 0 &&
+          existing.lastFetchedAt &&
+          Date.now() - existing.lastFetchedAt < TEN_MIN &&
+          !existing.cursor
+        ) {
+          if (key.endsWith(":all")) {
+            set({ videos: existing.items, lastFetchedVideosAt: existing.lastFetchedAt });
+          }
+          return;
+        }
+
+        if (existing.hasMore === false) {
+          return;
+        }
+
+        try {
+          const res = await getShortVideos(
+            10,
+            existing.cursor,
+            categoryId ?? null
+          );
+
+          if (res?.success && Array.isArray(res.data?.items)) {
+            const mapped = res.data.items.map((item: any) => {
+              const variants = (item.media?.variants || {}) as Record<string, string>;
+              const preferred = ["480p", "360p", "720p", "240p"]; // favor lower memory first
+              const first = (Object.values(variants) as any[])[0] || null;
+              const videoUrl = preferred.map((k) => variants[k]).find(Boolean) || first;
+
+              return {
+                _id: String(item.video_id),
+                video_id: item.video_id,
+                uri: videoUrl ? { uri: videoUrl as string } : null,
+                thumbnail: item.media?.thumbnail || null,
+
+                title_te: item.title_te,
+                title_en: item.title_en,
+                description_te: item.description_te,
+                description_en: item.description_en,
+
+                category_id: item.category_id,
+                category: {
+                  name_te: item.Category?.name_te,
+                  name_en: item.Category?.name_en,
+                },
+
+                hashtag: item.hashtag,
+                created_at: item.created_at,
+
+                stats: {
+                  likes_count: Number(item.stats?.likes_count || item.likes_count || 0),
+                  comments_count: Number(item.stats?.comments_count || 0),
+                  dislikes_count: Number(item.stats?.dislikes_count || 0),
+                  shares_count: Number(item.stats?.shares_count || 0),
+                  views_count: Number(item.stats?.views_count || item.views_count || 0),
+                  saves_count: Number(item.stats?.saves_count || 0),
+                },
+              };
+            });
+
+            const nextCursor = res.data?.nextCursor ?? null;
+            const unique = mapped.filter(
+              (a: any) => !existing.items.some((b: any) => String(b.video_id) === String(a.video_id))
+            );
+
+            const updated: VideoCache = {
+              items: [...existing.items, ...unique],
+              cursor: nextCursor,
+              hasMore: Boolean(nextCursor),
+              lastFetchedAt: Date.now(),
+            };
+
+            set((state) => ({
+              videosByCategory: { ...state.videosByCategory, [key]: updated },
+              ...(key.endsWith(":all")
+                ? { videos: updated.items, lastFetchedVideosAt: updated.lastFetchedAt }
+                : {}),
+            }));
+          }
+        } catch (err) {
+          console.error("❌ Error loading more videos:", err);
+        }
+      },
+      // ========== MAGAZINES ==========
+
+      magazines: [],
+      magCursor: null,
+      magHasMore: true,
+      lastFetchedMagazinesAt: null,
+
+      fetchMagazines: async (category_id?: number | null) => {
+        try {
+          const res = await getMagazines(10, null, category_id ?? null);
+          if (res?.success && Array.isArray(res.data?.items)) {
+            set({
+              magazines: res.data.items,
+              magCursor: res.data?.nextCursor || null,
+              magHasMore: !!res.data?.nextCursor,
+              lastFetchedMagazinesAt: Date.now(),
+            });
+          }
+        } catch (err) {
+          console.error("❌ Error fetching magazines:", err);
+        }
+      },
+
+      loadMoreMagazines: async (category_id?: number | null) => {
+        const { magazines, magCursor, magHasMore } = get();
+        if (!magHasMore) return;
+
+        try {
+          const res = await getMagazines(10, magCursor, category_id ?? null);
+          if (res?.success && Array.isArray(res.data?.items)) {
+            const newItems = res.data.items.filter(
+              (n: any) => !magazines.some((b: any) => b.magazine_id === n.magazine_id)
+            );
+            set({
+              magazines: [...magazines, ...newItems],
+              magCursor: res.data?.nextCursor || null,
+              magHasMore: !!res.data?.nextCursor,
+            });
+          }
+        } catch (err) {
+          console.error("❌ Error loading more magazines:", err);
+        }
+      },
+
+
+      // ========== CATEGORIES ==========
+      categories: [],
+      lastFetchedCategoriesAt: null,
+      fetchCategories: async () => {
+        const { lastFetchedCategoriesAt } = get();
+        const shouldRefetch =
+          !lastFetchedCategoriesAt ||
+          Date.now() - lastFetchedCategoriesAt > TEN_MIN ||
+          get().categories.length === 0;
+
+        if (!shouldRefetch) return;
+
+        try {
+          const res = await getCategories(); // hits https://api.Neuromindia.com/api/public/users/categories
+          if (res?.success && Array.isArray(res.data?.items)) {
+            const mapped = res.data.items.map((c: any) => ({
+              key: String(c.category_id),
+              label_en: c.display_name_en || c.name_en,
+              label_te: c.display_name_te || c.name_te,
+              icon_url: c.icon_url,
+              ...c,
+            }));
+
+            set({
+              categories: mapped,
+              lastFetchedCategoriesAt: Date.now(),
+            });
+
+            console.log("✅ Categories fetched:", mapped.length);
+          }
+        } catch (err) {
+          console.error("❌ Error fetching categories:", err);
+        }
+      },
+
+
+      // ========== BUZZ CONTENT ==========
+      buzzContents: [],
+      lastFetchedBuzzAt: null,
+      buzzCursor: null,
+      buzzHasMore: true,
+
+      fetchBuzzContents: async (category_id?: number | null, reset = false) => {
+        try {
+          if (reset) {
+            set({ buzzContents: [], buzzCursor: null, buzzHasMore: true });
+          }
+
+          const res = await getBuzzContents(10, null, category_id ?? null);
+          if (res?.success && Array.isArray(res.data?.items)) {
+            set({
+              buzzContents: res.data.items,
+              buzzCursor: res.data?.nextCursor || null,
+              buzzHasMore: !!res.data?.nextCursor,
+              lastFetchedBuzzAt: Date.now(),
+            });
+          }
+        } catch (err) {
+          console.error("❌ Error fetching buzz contents:", err);
+        }
+      },
+
+
+      loadMoreBuzz: async (category_id?: number | null) => {
+        const { buzzContents, buzzCursor, buzzHasMore } = get();
+        if (!buzzHasMore) return;
+
+        try {
+          const res = await getBuzzContents(10, buzzCursor, category_id ?? null);
+          if (res?.success && Array.isArray(res.data?.items)) {
+            const newItems = res.data.items.filter(
+              (n: any) => !buzzContents.some((b: any) => b.buzz_id === n.buzz_id)
+            );
+            set({
+              buzzContents: [...buzzContents, ...newItems],
+              buzzCursor: res.data?.nextCursor || null,
+              buzzHasMore: !!res.data?.nextCursor,
+            });
+          }
+        } catch (err) {
+          console.error("❌ Error loading more buzz:", err);
+        }
+      },
+
+
+      // ========== LIVE SCORE ==========
+      liveScore: null,
+      lastFetchedLiveScoreAt: null,
+      fetchLiveScore: async () => {
+        const { lastFetchedLiveScoreAt } = get();
+        const shouldRefetch =
+          !lastFetchedLiveScoreAt || Date.now() - lastFetchedLiveScoreAt > FIVE_MIN || !get().liveScore;
+        if (!shouldRefetch) return;
+        try {
+          const res = await fetch(`${API_CONFIG.baseUrl}/public/users/sports/live-scores`);
+          const json = await res.json();
+          const match = json?.success && Array.isArray(json.data?.items) && json.data.items.length > 0
+            ? json.data.items[0]
+            : null;
+          set({ liveScore: match, lastFetchedLiveScoreAt: Date.now() });
+        } catch (err) {
+          console.error("❌ Error fetching live score:", err);
+        }
+      },
+      // ========== HERO: BREAKING ==========
+      breakingNews: [],
+      lastFetchedBreakingAt: null,
+      fetchBreakingNews: async () => {
+        const { lastFetchedBreakingAt } = get();
+        const shouldRefetch =
+          !lastFetchedBreakingAt || Date.now() - lastFetchedBreakingAt > TEN_MIN || get().breakingNews.length === 0;
+        if (!shouldRefetch) return;
+        try {
+          const res = await getStateArticles(10, null, undefined, true, undefined);
+          if (res?.success && Array.isArray(res.data?.items)) {
+            set({ breakingNews: res.data.items, lastFetchedBreakingAt: Date.now() });
+          }
+        } catch (err) {
+          console.error("❌ Error fetching breaking news:", err);
+        }
+      },
+      // ========== HERO: TRENDING ==========
+      trendingNews: [],
+      lastFetchedTrendingAt: null,
+      fetchTrendingNews: async () => {
+  try {
+    console.log("🌍 Fetching trending news (no cache)...");
+    const res = await getStateArticles(10, undefined, undefined, true);
+
+    if (res?.success && Array.isArray(res.data?.items)) {
+      set({ trendingNews: res.data.items });
+      console.log("✅ Trending news loaded:", res.data.items.length);
+    } else {
+      console.warn("⚠️ No trending items received:", res);
+      set({ trendingNews: [] });
+    }
+  } catch (err) {
+    console.error("❌ Error fetching trending news:", err);
+    set({ trendingNews: [] });
+  }
+},
+
+      // ========== HERO: POLLS ==========
+      polls: [],
+      lastFetchedPollsAt: null,
+      fetchPolls: async () => {
+        const { lastFetchedPollsAt } = get();
+        const shouldRefetch =
+          !lastFetchedPollsAt || Date.now() - lastFetchedPollsAt > TEN_MIN || get().polls.length === 0;
+        if (!shouldRefetch) return;
+        try {
+          const res = await publicPolls.list();
+          if (res?.success && Array.isArray(res.data?.items)) {
+            set({ polls: res.data.items, lastFetchedPollsAt: Date.now() });
+          }
+        } catch (err) {
+          console.error("❌ Error fetching polls:", err);
+        }
+      },
+
+      // ========== EXCLUSIVE CONTENT ==========
+      exclusiveArticles: [],
+      exclusiveVideos: [],
+      lastFetchedExclusiveAt: null,
+
+      fetchExclusiveContent: async () => {
+        const { lastFetchedExclusiveAt } = get();
+        const shouldRefetch =
+          !lastFetchedExclusiveAt ||
+          Date.now() - lastFetchedExclusiveAt > TEN_MIN ||
+          (get().exclusiveArticles.length === 0 && get().exclusiveVideos.length === 0);
+
+        if (!shouldRefetch) {
+          console.log("✅ Using cached exclusive content");
+          return;
+        }
+
+        try {
+          console.log("🎯 Fetching exclusive content...");
+
+          // ✅ CORRECT: Pass parameters in the right order
+          const articlesRes = await getStateArticles(
+            10,           // limit
+            null,         // cursor
+            undefined,     // category_id
+            undefined,     // is_breaking
+            undefined,     // is_trending
+            true          // is_exclusive - this should be the 8th parameter
+          );
+          // console.log("🎯 Exclusive articles response:", articlesRes);
+          const exclusiveArticles = articlesRes?.success && Array.isArray(articlesRes.data?.items)
+            ? articlesRes.data.items
+            : [];
+
+          // ✅ CORRECT: Pass parameters in the right order
+          const videosRes = await getShortVideos(
+            10,           // limit
+            null,         // cursor
+            null,         // category_id
+            true          // is_exclusive - this should be the 6th parameter
+          );
+
+          const exclusiveVideos = videosRes?.success && Array.isArray(videosRes.data?.items)
+            ? videosRes.data.items.map((item: any) => {
+              const variants = (item.media?.variants || {}) as Record<string, string>;
+              const preferred = ["480p", "360p", "720p", "240p"];
+              const first = Object.values(variants)[0] || null;
+              const videoUrl = preferred.map((k) => variants[k]).find(Boolean) || first;
+
+              return {
+                _id: String(item.video_id),
+                video_id: item.video_id,
+                uri: videoUrl ? { uri: videoUrl } : null,
+                thumbnail: item.media?.thumbnail || null,
+                title_te: item.title_te,
+                title_en: item.title_en,
+                description_te: item.description_te,
+                description_en: item.description_en,
+                category_id: item.category_id,
+                category: {
+                  name_te: item.Category?.name_te,
+                  name_en: item.Category?.name_en,
+                },
+                hashtag: item.hashtag,
+                created_at: item.created_at,
+                stats: {
+                  likes_count: Number(item.stats?.likes_count || item.likes_count || 0),
+                  comments_count: Number(item.stats?.comments_count || 0),
+                  dislikes_count: Number(item.stats?.dislikes_count || 0),
+                  shares_count: Number(item.stats?.shares_count || 0),
+                  views_count: Number(item.stats?.views_count || item.views_count || 0),
+                  saves_count: Number(item.stats?.saves_count || 0),
+                },
+              };
+            })
+            : [];
+
+          set({
+            exclusiveArticles,
+            exclusiveVideos,
+            lastFetchedExclusiveAt: Date.now(),
+          });
+
+          console.log("✅ Exclusive content fetched:", {
+            articles: exclusiveArticles.length,
+            videos: exclusiveVideos.length
+          });
+        } catch (err) {
+          console.error("❌ Error fetching exclusive content:", err);
+        }
+      },
+
+      loadMoreExclusiveVideos: async () => {
+        const { exclusiveVideos } = get();
+
+        try {
+          // Get cursor from last video if available
+          const cursor = exclusiveVideos.length > 0 ? String(exclusiveVideos[exclusiveVideos.length - 1].video_id) : null;
+
+          // ✅ CORRECT: Pass is_exclusive as the 6th parameter
+
+  
+
+          const videosRes = await getShortVideos(
+            10,     // limit
+            cursor, // cursor
+            null,   // category_id
+            true    // is_exclusive
+          );
+
+          if (videosRes?.success && Array.isArray(videosRes.data?.items)) {
+            const newVideos = videosRes.data.items.map((item: any) => {
+              const variants = (item.media?.variants || {}) as Record<string, string>;
+              const preferred = ["480p", "360p", "720p", "240p"];
+              const first = Object.values(variants)[0] || null;
+              const videoUrl = preferred.map((k) => variants[k]).find(Boolean) || first;
+
+              return {
+                _id: String(item.video_id),
+                video_id: item.video_id,
+                uri: videoUrl ? { uri: videoUrl } : null,
+                thumbnail: item.media?.thumbnail || null,
+                title_te: item.title_te,
+                title_en: item.title_en,
+                description_te: item.description_te,
+                description_en: item.description_en,
+                category_id: item.category_id,
+                category: {
+                  name_te: item.Category?.name_te,
+                  name_en: item.Category?.name_en,
+                },
+                hashtag: item.hashtag,
+                created_at: item.created_at,
+                stats: {
+                  likes_count: Number(item.stats?.likes_count || item.likes_count || 0),
+                  comments_count: Number(item.stats?.comments_count || 0),
+                  dislikes_count: Number(item.stats?.dislikes_count || 0),
+                  shares_count: Number(item.stats?.shares_count || 0),
+                  views_count: Number(item.stats?.views_count || item.views_count || 0),
+                  saves_count: Number(item.stats?.saves_count || 0),
+                },
+              };
+            });
+
+            // Filter out duplicates
+            const uniqueVideos = newVideos.filter(
+              (newVideo: any) => !exclusiveVideos.some((existing: any) => existing.video_id === newVideo.video_id)
+            );
+
+            set({
+              exclusiveVideos: [...exclusiveVideos, ...uniqueVideos],
+            });
+          }
+        } catch (err) {
+          console.error("❌ Error loading more exclusive videos:", err);
+        }
+      },
+    }),
+    {
+      name: "content-storage",
+      storage: createJSONStorage(() => ({
+        getItem: (k) => mmkv.getString(k) ?? null,
+        setItem: (k, v) => mmkv.set(k, v),
+        removeItem: (k) => mmkv.delete(k),
+      })),
+    }
+  )
+);

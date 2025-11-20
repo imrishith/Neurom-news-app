@@ -1,0 +1,250 @@
+  setActiveTab(key);
+  console.log("Switched to tab:", key);
+
+  // 🟣 1. Latest tab → resume from cache
+  if (key === "latest") {
+    const latestKey = `${data.language_id}:${data.state_id}:latest`;
+    const storeState = useContentStore.getState();
+    const cache = storeState.articlesByCategory?.[latestKey];
+    const savedIndex =
+      typeof storeState.lastViewedIndexByCategory?.[latestKey] === "number"
+        ? (storeState.lastViewedIndexByCategory?.[latestKey] as number)
+        : 0;
+    const fresh =
+      cache?.lastFetchedAt &&
+      Date.now() - cache.lastFetchedAt < 10 * 60 * 1000;
+
+    if (cache && fresh) {
+      useContentStore.setState({
+        articles: cache.items,
+        cursor: cache.cursor,
+        hasMore: cache.hasMore,
+        lastFetchedAt: cache.lastFetchedAt,
+        isFetching: false,
+      });
+      const resumeIdx = Math.max(0, Math.min(savedIndex, cache.items.length - 1));
+      setCurrentIndex(resumeIdx);
+      setSelectedArticle(cache.items[resumeIdx] ?? null);
+    } else {
+      await fetchArticles(
+        data.language_id,
+        data.state_id,
+        false,
+        undefined,
+        "state-articles"
+      );
+      const items = useContentStore.getState().articles || [];
+      setCurrentIndex(0);
+      setSelectedArticle(items[0] ?? null);
+    }
+    return;
+  }
+
+  // 🟢 2. State or Category tabs → always fresh
+  const { endpoint, category_id } = resolveArticleEndpoint(key);
+  console.log("🔹 Endpoint:", endpoint, "Category ID:", category_id);
+
+  useContentStore.getState().resetPagination?.();
+  setCurrentIndex(0);
+  setSelectedArticle(null);
+
+  try {
+    await fetchArticles(
+      data.language_id,
+      data.state_id,
+      true, // reset
+      category_id,
+      endpoint, // "articles" for both state & category
+      {
+        district_id: data.district_id,
+        mandal_id: data.mandal_id,
+        village_id: data.village_id,
+      }
+    );
+  } catch (err) {
+    console.error("Error fetching articles:", err);
+  }
+};
+
+
+  const handleIndexChange = (idx: number) => {
+    setCurrentIndex(idx);
+    setSelectedArticle(posts[idx]);
+
+    // Save resume index for Latest
+    if (activeTab === "latest" && data?.language_id && data?.state_id) {
+      useContentStore.getState().setLastViewedLatest?.(data.language_id, data.state_id, idx);
+      // Prefetch next page when nearing the end for Latest only
+      if (hasMore && !isFetching) {
+        const remaining = (articles || []).length - (idx + 1);
+        if (remaining <= 2) {
+          loadMoreArticles(data.language_id, data.state_id, undefined, "state-articles");
+        }
+      }
+    }
+  };
+
+  const handleToggleMode = (textMode: boolean) => {
+    if (!textMode) {
+      Tts.stop();
+    }
+    setIsTextMode(textMode);
+  };
+
+  const handlePlayPause = () => {
+    if (isSpeaking) {
+      Tts.stop();
+      setIsSpeaking(false);
+    } else if (selectedArticle) {
+      const isTelugu = getLangCode() === "te";
+      const description = isTelugu
+        ? selectedArticle.content_te
+        : selectedArticle.content_en;
+
+      if (description) {
+        const normalizedVoice = (data.voice || "Female").toLowerCase();
+        const key = `${isTelugu ? "Telugu" : "English"}_${normalizedVoice === "male" ? "Male" : "Female"}`;
+        const voiceConfig = VOICE_MAP[key];
+
+        if (voiceConfig?.id) {
+          Tts.setDefaultVoice(voiceConfig.id);
+        } else if (voiceConfig?.lang) {
+          Tts.setDefaultLanguage(voiceConfig.lang);
+        }
+
+        Tts.speak(description);
+        setIsSpeaking(true);
+      }
+    }
+  };
+
+  const loading = articles.length === 0;
+
+  return (
+    <View style={[styles.root, { backgroundColor: Colors.darkpurple }]}>
+      <StatusBar barStyle={barStyle} translucent backgroundColor="transparent" />
+
+      {/* TopBar */}
+      {(!articleId || posts.length > 1) && (
+        <SafeAreaView
+          edges={["top"]}
+          style={[styles.topbarContainer, { backgroundColor: Colors.darkpurple }]}
+        >
+          <View style={styles.topbarInner}>
+            <TopBar
+              tabs={localizedTabs}
+              activeTab={activeTab}
+              onTabPress={handleTabPress}
+            />
+          </View>
+        </SafeAreaView>
+      )}
+
+      {/* Loading State */}
+      {isFetching && (
+        <View style={{ paddingVertical: fh(15), alignItems: "center" }}>
+          <ActivityIndicator size="small" color={Colors.lavenderPurple} />
+        </View>
+      )}
+
+      {/* Empty State */}
+      {!isFetching && posts.length === 0 && (
+        <View style={styles.loader}>
+          <Text
+            style={{
+              color: Colors.textcolor,
+              fontFamily: getFont("medium"),
+              fontSize: ff(14),
+            }}
+          >
+            No Articles Available
+          </Text>
+        </View>
+      )}
+
+      {/* Content */}
+      {!loading && posts.length > 0 && (
+        <View style={styles.deckContainer}>
+          <DeckSwiper
+            data={posts}
+            currentIndex={currentIndex}
+            swipeEnabled={isTextMode && posts.length > 1}
+            extraKey={isTextMode}
+            onIndexChange={handleIndexChange}
+            renderCard={(item, index) => {
+              if (!item) return <View style={{ flex: 1 }} />;
+
+              return isTextMode ? (
+                <ArticleTextMode
+                  article={item}
+                  index={index}
+                  totalPosts={posts.length}
+                  colors={Colors}
+                  getFont={getFont}
+                  getLangCode={getLangCode}
+                  deviceId={data.device_id}
+                  onReport={() => setReportVisible(true)}
+                  onShare={() => setShareVisible(true)}
+                  onComment={() => {
+                    setSelectedArticleId(item.article_id);
+                    setCommentVisible(true);
+                  }}
+                  onToggleMode={handleToggleMode}
+                  isTextMode={isTextMode}
+                />
+              ) : (
+                <ArticleAudioMode
+                  article={item}
+                  index={index}
+                  totalPosts={posts.length}
+                  colors={Colors}
+                  getFont={getFont}
+                  getLangCode={getLangCode}
+                  deviceId={data.device_id}
+                  onReport={() => setReportVisible(true)}
+                  onShare={() => setShareVisible(true)}
+                  onComment={() => {
+                    setSelectedArticleId(item.article_id);
+                    setCommentVisible(true);
+                  }}
+                  onToggleMode={handleToggleMode}
+                  isTextMode={isTextMode}
+                  isSpeaking={isSpeaking}
+                  onPlayPause={handlePlayPause}
+                  posts={posts}
+                  currentIndex={currentIndex}
+                  onSelectArticle={(article, idx) => {
+                    setSelectedArticle(article);
+                    setCurrentIndex(idx);
+                  }}
+                />
+              );
+            }}
+          />
+        </View>
+      )}
+
+      {/* Modals */}
+      <SidebarPanel
+        visible={isSidebarVisible}
+        onClose={() => setSidebarVisible(false)}
+        categories={categories}
+        activeCategoryKey={activeTab}
+        selectedCategories={selectedCategories}
+        onCategoryPress={(cat) => {
+          setSelectedCategories((prev) =>
+            prev.includes(cat.key)
+              ? prev.filter((c) => c !== cat.key)
+              : [...prev, cat.key]
+          );
+        }}
+      />
+
+      <ShareModal visible={shareVisible} onClose={() => setShareVisible(false)} />
+      {selectedArticleId && (
+        <CommentModal
+          visible={commentVisible}
+          onClose={() => setCommentVisible(false)}
+          contentId={selectedArticleId}
+          contentType="articles"
+        />

@@ -1,0 +1,37 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/BalooTammudu2-Bold.ttf",
+      "sha1": "945c0f460b4df53d38617aeb4c4d4978af4eaf05"
+    },
+    {
+      "path": "assets/fonts/BalooTammudu2-Medium.ttf",
+      "sha1": "ca70b9a6134549888f2a4c174beb1dc4c1cb3bda"
+    },
+    {
+      "path": "assets/fonts/BalooTammudu2-Regular.ttf",
+      "sha1": "3e8fe25177035560f343b3a1247c441dfce5ea62"
+    },
+    {
+      "path": "assets/fonts/BalooTammudu2-SemiBold.ttf",
+      "sha1": "4faba71134dd2313660bb361c3fba8516cd64040"
+    },
+    {
+      "path": "assets/fonts/Inter_24pt-Bold.ttf",
+      "sha1": "a3fca01f38566345ad860db12b7359c58059b0ab"
+    },
+    {
+      "path": "assets/fonts/Inter_24pt-Medium.ttf",
+      "sha1": "3b9f3360ca812f2076db0bfc8bed4cfdd951e74f"
+    },
+    {
+      "path": "assets/fonts/Inter_24pt-Regular.ttf",
+      "sha1": "b9984093c0b2b612da5e58e4d4e1ba8c255353dc"
+    },
+    {
+      "path": "assets/fonts/Inter_24pt-SemiBold.ttf",
+      "sha1": "ee81756dc9685877077aae9027708aa84bc56027"
+    }
+  ]
+}

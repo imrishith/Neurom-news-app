@@ -1,0 +1,298 @@
+   1: // App.tsx
+   2: /**
+   3:  * Optimized Prefetch Flow (2025)
+   4:  * - Single orchestrated prefetch in App.tsx after rehydration
+   5:  * - usePrefetchContent() handles only manual refresh
+   6:  * - Prevents redundant API hits and improves cold-start speed
+   7:  */
+   8: import React, { useEffect, useRef, useState } from "react";
+   9: import { NavigationContainer } from "@react-navigation/native";
+  10: import { SafeAreaProvider } from "react-native-safe-area-context";
+  11: import AppNavigator from "./navigation/AppNavigator";
+  12: import { ThemeProvider } from "./src/context/ThemeContext";
+  13: import { OnboardingProvider } from "./src/context/OnboardingContext";
+  14: import { LogBox, Text, TextInput, Linking, AppState, InteractionManager } from "react-native";
+  15: import { navigationRef } from './navigation/navigationRef';
+  16: import { Fonts } from "./utils/typography";  // keep font map import
+  17: import { useContentStore } from "./utils/contentStore";
+  18: import { MMKV } from "react-native-mmkv";
+  19: import messaging from '@react-native-firebase/messaging';
+  20: import notifee, { AndroidImportance, AndroidStyle } from '@notifee/react-native';
+  21: 
+  22: // Disable system scaling & lock default font globally
+  23: // @ts-ignore
+  24: Text.defaultProps = Text.defaultProps || {};
+  25: // @ts-ignore
+  26: Text.defaultProps.allowFontScaling = false;
+  27: // @ts-ignore
+  28: Text.defaultProps.style = {
+  29:   fontFamily: "Inter-Regular",
+  30: };
+  31: 
+  32: // @ts-ignore
+  33: TextInput.defaultProps = TextInput.defaultProps || {};
+  34: // @ts-ignore
+  35: TextInput.defaultProps.allowFontScaling = false;
+  36: // @ts-ignore
+  37: TextInput.defaultProps.style = {
+  38:   fontFamily: "Inter-Regular",
+  39: };
+  40: 
+  41: export default function App() {
+  42:   const mmkv = new MMKV();
+  43:   const appState = useRef(AppState.currentState);
+  44: 
+  45:   // One-time guard to ensure we only force-refresh on a true cold start
+  46:   const didColdStartRefresh = useRef(false);
+  47:   // Track when Zustand persist has finished rehydrating from MMKV
+  48:   // Some zustand versions expose `persist.hasHydrated()` and `persist.onFinishHydration`.
+  49:   // We try to use them; if unavailable, we fall back to first tick.
+  50:   const [hasHydrated, setHasHydrated] = useState(
+  51:     // @ts-ignore - optional chaining across versions
+  52:     (useContentStore as any)?.persist?.hasHydrated?.() ?? false
+  53:   );
+  54: 
+  55: 
+  56:   useEffect(() => {
+  57:     async function setupNotifications() {
+  58:       try {
+  59:         // 1️⃣ Request notification permissions (Android 13+)
+  60:         await notifee.requestPermission();
+  61: 
+  62:         const authStatus = await messaging().requestPermission();
+  63:         const enabled =
+  64:           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  65:           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  66: 
+  67:         console.log(enabled ? '🔔 Push permission granted' : '🚫 Push permission denied');
+  68: 
+  69:         // 2️⃣ Create default notification channel (MUST match channelId below)
+  70:         const channelId = await notifee.createChannel({
+  71:           id: 'default',
+  72:           name: 'Default Channel',
+  73:           importance: AndroidImportance.HIGH,
+  74:         });
+  75: 
+  76:         // 3️⃣ Log the current FCM token for backend linking
+  77:         const token = await messaging().getToken();
+  78:         console.log('📱 Device FCM Token:', token);
+  79: 
+  80:         // 4️⃣ Foreground message listener → show Notifee notification manually
+  81:         const unsubscribeOnMessage = messaging().onMessage(async (remoteMessage) => {
+  82:           console.log('📩 Foreground FCM:', remoteMessage);
+  83: 
+  84:           // Defensive guard: ensure channelId is valid
+  85:           await notifee.displayNotification({
+  86:             title: remoteMessage.notification?.title ?? "Neurom News", // short prefix only
+  87:             body: remoteMessage.notification?.title ?? "", // move long content here
+  88:             android: {
+  89:               channelId,
+  90:               smallIcon: "ic_launcher",
+  91:               pressAction: { id: "default" },
+  92:               importance: AndroidImportance.HIGH,
+  93:               largeIcon: remoteMessage.data?.image,
+  94:               style: {
+  95:                 type: AndroidStyle.BIGTEXT,
+  96:                 text: remoteMessage.notification?.title ?? "", // full multi-line text
+  97:               } as any,
+  98:             },
+  99:             data: remoteMessage.data,
+ 100:           });
+ 101: 
+ 102:         });
+ 103: 
+ 104:         // 5️⃣ When user taps notification in background
+ 105:         const unsubscribeOnOpened = messaging().onNotificationOpenedApp((remoteMessage) => {
+ 106:           console.log('📲 Notification opened (background):', remoteMessage);
+ 107:           if (remoteMessage?.data?.article_id) {
+ 108:             Linking.openURL(`Neurom://article/${remoteMessage.data.article_id}`);
+ 109:           }
+ 110:         });
+ 111: 
+ 112:         // 6️⃣ Handle cold start (app launched by tapping notification)
+ 113:         const initialMessage = await messaging().getInitialNotification();
+ 114:         if (initialMessage?.data?.article_id) {
+ 115:           Linking.openURL(`Neurom://article/${initialMessage.data.article_id}`);
+ 116:         }
+ 117: 
+ 118:         return () => {
+ 119:           unsubscribeOnMessage();
+ 120:           unsubscribeOnOpened();
+ 121:         };
+ 122:       } catch (error) {
+ 123:         console.error('❌ FCM setup failed:', error);
+ 124:       }
+ 125:     }
+ 126: 
+ 127:     setupNotifications();
+ 128:   }, []);
+ 129: 
+ 130: 
+ 131:   useEffect(() => {
+ 132:     if (!hasHydrated) return;
+ 133:     if (hasPrefetched.current) return;
+ 134:     hasPrefetched.current = true;
+ 135: 
+ 136:     const prefetchAppData = async () => {
+ 137:       const {
+ 138:         fetchCategories,
+ 139:         fetchArticles,
+ 140:         fetchVideos,
+ 141:         fetchBuzzContents,
+ 142:         fetchMagazines,
+ 143:         fetchTrendingNews,
+ 144:         fetchPolls,
+ 145:         fetchBreakingNews,
+ 146:         fetchExclusiveContent,
+ 147:       } = useContentStore.getState();
+ 148: 
+ 149:       if (__DEV__) console.log("🚀 App prefetch started...");
+ 150:       await fetchCategories();
+ 151:       await fetchArticles();
+ 152:       await fetchVideos();
+ 153:       await fetchBuzzContents();
+ 154:       await fetchMagazines();
+ 155:       await fetchTrendingNews();
+ 156:       await fetchBreakingNews();
+ 157:       await fetchPolls();
+ 158:       await fetchExclusiveContent();
+ 159:       if (__DEV__) console.log("✅ App prefetch complete.");
+ 160:     };
+ 161: 
+ 162:     InteractionManager.runAfterInteractions(prefetchAppData);
+ 163:   }, [hasHydrated]);
+ 164: 
+ 165:   // Global log setup
+ 166:   useEffect(() => {
+ 167:     try {
+ 168:       LogBox.ignoreLogs(["Setting a timer"]);
+ 169:       // @ts-ignore
+ 170:       console.reportErrorsAsExceptions = false;
+ 171:       // @ts-ignore
+ 172:       if (global?.ErrorUtils?.setGlobalHandler) {
+ 173:         // @ts-ignore
+ 174:         global.ErrorUtils.setGlobalHandler((err: any, isFatal?: boolean) => {
+ 175:           if (__DEV__) {
+ 176:             console.log("GLOBAL ERROR:", {
+ 177:               message: err?.message,
+ 178:               isFatal,
+ 179:               stack: err?.stack,
+ 180:             });
+ 181:           }
+ 182:         });
+ 183:       }
+ 184:     } catch (e) { }
+ 185:   }, []);
+ 186: 
+ 187:   // Keep AppState updated only; do not refetch on background->active within a session.
+ 188:   useEffect(() => {
+ 189:     const sub = AppState.addEventListener("change", (nextState) => {
+ 190:       appState.current = nextState;
+ 191:     });
+ 192:     return () => sub.remove();
+ 193:   }, []);
+ 194: 
+ 195:   // Detect and wait for Zustand persistence to finish, then do a one-time cold-start refresh.
+ 196:   // Why this fixes cold-start:
+ 197:   // - On an actual relaunch there is no background→active transition, so the old AppState
+ 198:   //   listener never fired.
+ 199:   // - Hydration is async; if we fetch before hydration completes, rehydrated (stale) state could
+ 200:   //   overwrite fresh results. We wait for hydration, then fetch once, guarded by a ref.
+ 201:   useEffect(() => {
+ 202:     // @ts-ignore - optional chaining across versions
+ 203:     const persistApi = (useContentStore as any)?.persist;
+ 204:     const unsubFinish = persistApi?.onFinishHydration?.(() => setHasHydrated(true));
+ 205:     if (persistApi?.hasHydrated?.()) setHasHydrated(true);
+ 206: 
+ 207:     // Fallback: if the API isn't present, assume hydration completes next tick
+ 208:     if (!persistApi || persistApi?.hasHydrated == null) {
+ 209:       const t = setTimeout(() => setHasHydrated(true), 0);
+ 210:       return () => clearTimeout(t);
+ 211:     }
+ 212: 
+ 213:     return () => {
+ 214:       try { unsubFinish?.(); } catch { }
+ 215:     };
+ 216:   }, []);
+ 217: 
+ 218:   // Centralized orchestrated prefetch after rehydration
+ 219:   const hasPrefetched = useRef(false);
+ 220:   useEffect(() => {
+ 221:     if (!hasHydrated) return;
+ 222:     if (hasPrefetched.current) return;
+ 223:     hasPrefetched.current = true;
+ 224: 
+ 225:     const prefetchAppData = async () => {
+ 226:       const {
+ 227:         fetchCategories,
+ 228:         fetchArticles,
+ 229:         fetchVideos,
+ 230:         fetchBuzzContents,
+ 231:         fetchMagazines,
+ 232:         fetchTrendingNews,
+ 233:         fetchPolls,
+ 234:         fetchBreakingNews,
+ 235:         fetchExclusiveContent,
+ 236:       } = useContentStore.getState();
+ 237: 
+ 238:       if (__DEV__) console.log("?? App prefetch started...");
+ 239:       await fetchCategories();
+ 240:       await fetchArticles();
+ 241:       await fetchVideos();
+ 242:       await fetchBuzzContents();
+ 243:       await fetchMagazines();
+ 244:       await fetchTrendingNews();
+ 245:       await fetchBreakingNews();
+ 246:       await fetchPolls();
+ 247:       await fetchExclusiveContent();
+ 248:       if (__DEV__) console.log("✅ App prefetch complete.");
+ 249:     };
+ 250: 
+ 251:     InteractionManager.runAfterInteractions(prefetchAppData);
+ 252:   }, [hasHydrated]);
+ 253: 
+ 254:   // Deep link handling: Neurom://article/{id} and https://Neuromindia.com/article/{id}
+ 255:   useEffect(() => {
+ 256:     const parseAndNavigate = (url?: string | null) => {
+ 257:       if (!url) return;
+ 258:       try {
+ 259:         const schemeRe = /Neurom:\/\/article\/(\d+)/i;
+ 260:         const httpsRe = /https?:\/\/Neuromindia\.com\/article\/(\d+)/i;
+ 261:         const match = url.match(schemeRe) || url.match(httpsRe);
+ 262:         const idStr = match?.[1];
+ 263:         const articleId = idStr ? Number(idStr) : NaN;
+ 264:         if (!isNaN(articleId)) {
+ 265:           if (navigationRef.isReady()) {
+ 266:             // @ts-ignore
+ 267:             navigationRef.navigate('ArticleScreen' as never, { articleId } as never);
+ 268:           } else {
+ 269:             setTimeout(() => {
+ 270:               // @ts-ignore
+ 271:               navigationRef.navigate('ArticleScreen' as never, { articleId } as never);
+ 272:             }, 0);
+ 273:           }
+ 274:         }
+ 275:       } catch { }
+ 276:     };
+ 277: 
+ 278:     Linking.getInitialURL().then(parseAndNavigate).catch(() => { });
+ 279:     const sub = Linking.addEventListener('url', (e: any) => parseAndNavigate(e?.url));
+ 280:     return () => {
+ 281:       // @ts-ignore
+ 282:       sub?.remove?.();
+ 283:     };
+ 284:   }, []);
+ 285: 
+ 286:   return (
+ 287:     <SafeAreaProvider>
+ 288:       <OnboardingProvider>
+ 289:         <ThemeProvider>
+ 290:           <NavigationContainer ref={navigationRef}>
+ 291:             <AppNavigator />
+ 292:           </NavigationContainer>
+ 293:         </ThemeProvider>
+ 294:       </OnboardingProvider>
+ 295:     </SafeAreaProvider>
+ 296:   );
+ 297: }
+

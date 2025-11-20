@@ -1,0 +1,46 @@
+# Resolve react_native_pods.rb with Node (for monorepo / hoisting support)
+require Pod::Executable.execute_command('node', [
+  '-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    { paths: [process.argv[1]] },
+  )',
+  __dir__
+]).strip
+
+platform :ios, '16.0'
+prepare_react_native_project!
+
+# --- Frameworks & modular headers ---
+# Always enable both for Firebase + RN Reanimated + Swift pods
+use_frameworks! :linkage => :static
+use_modular_headers!
+
+target 'Neurom' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :hermes_enabled => true,            # keep Hermes enabled
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  target 'NeuromTests' do
+    inherit! :complete
+  end
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+
+    # ✅ Ensures all targets use iOS 16 and proper build settings
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+      end
+    end
+  end
+end
