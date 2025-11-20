@@ -1,0 +1,988 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.Neurom"
+4    android:versionCode="9"
+5    android:versionName="1.0.2" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+9        android:targetSdkVersion="36" />
+10    <!-- Android 11+ package visibility: allow querying WhatsApp for canOpenURL/intents -->
+11    <queries>
+11-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:4:5-25:15
+12
+13        <!-- WhatsApp specific -->
+14        <package android:name="com.whatsapp" />
+14-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:6:9-48
+14-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:6:18-45
+15        <package android:name="com.whatsapp.w4b" />
+15-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:7:9-52
+15-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:7:18-49
+16        <package android:name="com.twitter.android" />
+16-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:8:9-55
+16-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:8:18-52
+17        <package android:name="com.instagram.android" />
+17-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:9:9-57
+17-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:9:18-54
+18        <!-- Generic: for any app supporting ACTION_SEND -->
+19        <intent>
+19-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:11:9-14:18
+20            <action android:name="android.intent.action.SEND" />
+20-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:12:13-65
+20-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:12:21-62
+21
+22            <data android:mimeType="*/*" />
+22-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+22-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:19-41
+23        </intent>
+24
+25        <!-- Optional: open URLs / web-based intents -->
+26        <intent>
+26-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:17:9-20:18
+27            <action android:name="android.intent.action.VIEW" />
+27-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:13-65
+27-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:21-62
+28
+29            <data android:scheme="http" />
+29-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+30        </intent>
+31        <intent>
+31-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:21:9-24:18
+32            <action android:name="android.intent.action.VIEW" />
+32-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:13-65
+32-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:21-62
+33
+34            <data android:scheme="https" />
+34-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+35        </intent>
+36
+37        <package android:name="androidx.test.orchestrator" />
+37-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:25:9-62
+37-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:25:18-59
+38        <package android:name="androidx.test.services" />
+38-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:26:9-58
+38-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:26:18-55
+39        <package android:name="com.google.android.apps.common.testing.services" />
+39-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:27:9-83
+39-->[androidx.test:runner:1.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b2d46003d21597689b5ba4bac75ee923\transformed\runner-1.4.0\AndroidManifest.xml:27:18-80
+40    </queries>
+41
+42    <uses-permission android:name="android.permission.INTERNET" />
+42-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:27:5-67
+42-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:27:22-64
+43    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+43-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:28:5-79
+43-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:28:22-76
+44    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+44-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:29:5-81
+44-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:29:22-78
+45    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+45-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:30:5-77
+45-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:30:22-74
+46    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+46-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:31:5-77
+46-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:31:22-74
+47    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+47-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:32:5-92
+47-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:32:22-89
+48    <uses-permission android:name="android.permission.WAKE_LOCK" />
+48-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:33:5-68
+48-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:33:22-65
+49    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+49-->[:react-native-community_netinfo] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-79
+49-->[:react-native-community_netinfo] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:22-76
+50    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required to read and write the expansion files on shared storage -->
+50-->[:react-native-community_netinfo] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-76
+50-->[:react-native-community_netinfo] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-community\netinfo\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:22-73
+51    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required to read and write the expansion files on shared storage for Android 11 -->
+51-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:5-81
+51-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:22-78
+52    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Required to to download files without a notification -->
+52-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:5-80
+52-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:22-77
+53    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+53-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:32:5-88
+53-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:32:22-85
+54    <!--
+55    This manifest file is used only by Gradle to configure debug-only capabilities
+56    for React Native Apps.
+57    -->
+58    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+58-->[com.facebook.react:react-android:0.74.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\408527ca30a0537bd8702267c7f3de3b\transformed\jetified-react-android-0.74.2-debug\AndroidManifest.xml:16:5-78
+58-->[com.facebook.react:react-android:0.74.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\408527ca30a0537bd8702267c7f3de3b\transformed\jetified-react-android-0.74.2-debug\AndroidManifest.xml:16:22-75
+59    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+59-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:25:5-81
+59-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:25:22-78
+60    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+60-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:26:5-82
+60-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:26:22-79
+61
+62    <permission
+62-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+63        android:name="com.Neurom.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+63-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+64        android:protectionLevel="signature" />
+64-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+65
+66    <uses-permission android:name="com.Neurom.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+66-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+66-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+67    <uses-permission android:name="android.permission.VIBRATE" />
+67-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:13:5-66
+67-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:13:22-63
+68    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+68-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:16:5-79
+68-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:16:22-76
+69    <uses-permission
+69-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:17:5-19:38
+70        android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
+70-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:18:9-73
+71        android:maxSdkVersion="30" /> <!-- For Xiaomi devices to enable heads-up notifications as default (https://github.com/invertase/notifee/issues/296) -->
+71-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:19:9-35
+72    <uses-permission
+72-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:21:5-23:38
+73        android:name="android.permission.ACCESS_NOTIFICATION_POLICY"
+73-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:22:9-69
+74        android:minSdkVersion="23" />
+74-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:23:9-35
+75    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+75-->[com.android.installreferrer:installreferrer:1.1.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\385fb187d2a721b0103fbc982cdc7577\transformed\jetified-installreferrer-1.1.2\AndroidManifest.xml:9:5-110
+75-->[com.android.installreferrer:installreferrer:1.1.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\385fb187d2a721b0103fbc982cdc7577\transformed\jetified-installreferrer-1.1.2\AndroidManifest.xml:9:22-107
+76
+77    <application
+77-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:38:5-81:19
+78        android:name="com.Neurom.MainApplication"
+78-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:39:7-38
+79        android:allowBackup="false"
+79-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:42:7-34
+80        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+80-->[androidx.core:core:1.13.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\b0748449f5c54a664c4bfd6c672c8cda\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+81        android:debuggable="true"
+82        android:extractNativeLibs="false"
+82-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:44:7-40
+83        android:icon="@mipmap/ic_launcher"
+83-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:41:7-41
+84        android:label="@string/app_name"
+84-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:40:7-39
+85        android:networkSecurityConfig="@xml/network_security_config"
+85-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:45:7-67
+86        android:theme="@style/AppTheme"
+86-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:43:7-38
+87        android:usesCleartextTraffic="true" >
+87-->C:\Users\pitti\Downloads\Neurom\android\app\src\debug\AndroidManifest.xml:6:9-44
+88        <meta-data
+88-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:47:5-49:30
+89            android:name="android.window.extensions.disableEdgeToEdge"
+89-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:48:7-65
+90            android:value="true" />
+90-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:49:7-27
+91
+92        <activity
+92-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:51:7-80:18
+93            android:name="com.Neurom.MainActivity"
+93-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:52:9-37
+94            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+94-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:54:9-118
+95            android:exported="true"
+95-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:58:9-32
+96            android:label="@string/app_name"
+96-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:53:9-41
+97            android:launchMode="singleTask"
+97-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:56:9-40
+98            android:screenOrientation="portrait"
+98-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:55:9-45
+99            android:windowSoftInputMode="adjustResize" >
+99-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:57:9-51
+100            <intent-filter>
+100-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:59:9-62:25
+101                <action android:name="android.intent.action.MAIN" />
+101-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:60:13-65
+101-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:60:21-62
+102
+103                <category android:name="android.intent.category.LAUNCHER" />
+103-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:61:13-73
+103-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:61:23-70
+104            </intent-filter>
+105
+106            <!-- Deep link: custom scheme for article view (shortly://article/{id}) -->
+107            <intent-filter>
+107-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:65:9-70:25
+108                <action android:name="android.intent.action.VIEW" />
+108-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:13-65
+108-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:21-62
+109
+110                <category android:name="android.intent.category.DEFAULT" />
+110-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:67:13-72
+110-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:67:23-69
+111                <category android:name="android.intent.category.BROWSABLE" />
+111-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:68:13-74
+111-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:68:23-71
+112
+113                <data
+113-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+114                    android:host="article"
+115                    android:scheme="shortly" />
+116            </intent-filter>
+117
+118            <!-- Optional: HTTP(s) app link to open articles directly from web links -->
+119            <intent-filter>
+119-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:73:9-79:25
+120                <action android:name="android.intent.action.VIEW" />
+120-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:13-65
+120-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:18:21-62
+121
+122                <category android:name="android.intent.category.DEFAULT" />
+122-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:67:13-72
+122-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:67:23-69
+123                <category android:name="android.intent.category.BROWSABLE" />
+123-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:68:13-74
+123-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:68:23-71
+124
+125                <data
+125-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+126                    android:host="shortlyindia.com"
+127                    android:pathPrefix="/article"
+128                    android:scheme="https" />
+129                <data
+129-->C:\Users\pitti\Downloads\Neurom\android\app\src\main\AndroidManifest.xml:13:13-44
+130                    android:host="shortlyindia.com"
+131                    android:pathPrefix="/article"
+132                    android:scheme="http" />
+133            </intent-filter>
+134        </activity>
+135
+136        <provider
+136-->[:notifee_react-native] C:\Users\pitti\Downloads\Neurom\node_modules\@notifee\react-native\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:40
+137            android:name="io.invertase.notifee.NotifeeInitProvider"
+137-->[:notifee_react-native] C:\Users\pitti\Downloads\Neurom\node_modules\@notifee\react-native\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-68
+138            android:authorities="com.Neurom.notifee-init-provider"
+138-->[:notifee_react-native] C:\Users\pitti\Downloads\Neurom\node_modules\@notifee\react-native\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-73
+139            android:exported="false"
+139-->[:notifee_react-native] C:\Users\pitti\Downloads\Neurom\node_modules\@notifee\react-native\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+140            android:initOrder="-100" />
+140-->[:notifee_react-native] C:\Users\pitti\Downloads\Neurom\node_modules\@notifee\react-native\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-37
+141
+142        <service
+142-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:9-14:40
+143            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService"
+143-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-103
+144            android:exported="false" />
+144-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:13-37
+145        <service
+145-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-21:19
+146            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
+146-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-95
+147            android:exported="false" >
+147-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-37
+148            <intent-filter>
+148-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-20:29
+149                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+149-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:17-78
+149-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:25-75
+150            </intent-filter>
+151        </service>
+152
+153        <receiver
+153-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:9-30:20
+154            android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingReceiver"
+154-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:13-96
+155            android:exported="true"
+155-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:13-36
+156            android:permission="com.google.android.c2dm.permission.SEND" >
+156-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:13-73
+157            <intent-filter>
+157-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-29:29
+158                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+158-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:17-81
+158-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:25-78
+159            </intent-filter>
+160        </receiver>
+161
+162        <meta-data
+162-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:32:9-34:37
+163            android:name="delivery_metrics_exported_to_big_query_enabled"
+163-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:33:13-74
+164            android:value="false" />
+164-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:34:13-34
+165        <meta-data
+165-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:35:9-37:36
+166            android:name="firebase_messaging_auto_init_enabled"
+166-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:36:13-64
+167            android:value="true" />
+167-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:37:13-33
+168        <meta-data
+168-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:38:9-40:37
+169            android:name="firebase_messaging_notification_delegation_enabled"
+169-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:39:13-78
+170            android:value="false" />
+170-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:40:13-34
+171        <meta-data
+171-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:41:9-43:32
+172            android:name="com.google.firebase.messaging.default_notification_channel_id"
+172-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:42:13-89
+173            android:value="" />
+173-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:43:13-29
+174        <meta-data
+174-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:44:9-46:47
+175            android:name="com.google.firebase.messaging.default_notification_color"
+175-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:45:13-84
+176            android:resource="@color/white" />
+176-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:46:13-44
+177        <meta-data
+177-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:9-11:36
+178            android:name="app_data_collection_default_enabled"
+178-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-63
+179            android:value="true" />
+179-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-33
+180
+181        <service
+181-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:9-21:19
+182            android:name="com.google.firebase.components.ComponentDiscoveryService"
+182-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:13-84
+183            android:directBootAware="true"
+183-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-43
+184            android:exported="false" >
+184-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-37
+185            <meta-data
+185-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-20:85
+186                android:name="com.google.firebase.components:io.invertase.firebase.app.ReactNativeFirebaseAppRegistrar"
+186-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:17-120
+187                android:value="com.google.firebase.components.ComponentRegistrar" />
+187-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:17-82
+188            <meta-data
+188-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:57:13-59:85
+189                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+189-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:58:17-122
+190                android:value="com.google.firebase.components.ComponentRegistrar" />
+190-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:59:17-82
+191            <meta-data
+191-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:60:13-62:85
+192                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+192-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:61:17-119
+193                android:value="com.google.firebase.components.ComponentRegistrar" />
+193-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:62:17-82
+194            <meta-data
+194-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:15:13-17:85
+195                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+195-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:16:17-130
+196                android:value="com.google.firebase.components.ComponentRegistrar" />
+196-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:17:17-82
+197            <meta-data
+197-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:18:13-20:85
+198                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+198-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:19:17-127
+199                android:value="com.google.firebase.components.ComponentRegistrar" />
+199-->[com.google.firebase:firebase-installations:19.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ce334254196112fa17d8a4a6f732f5d5\transformed\jetified-firebase-installations-19.0.1\AndroidManifest.xml:20:17-82
+200            <meta-data
+200-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:35:13-37:85
+201                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+201-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:36:17-109
+202                android:value="com.google.firebase.components.ComponentRegistrar" />
+202-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:37:17-82
+203            <meta-data
+203-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\8a1ef8fe1a11059e69630a6dd51aa403\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:25:13-27:85
+204                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+204-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\8a1ef8fe1a11059e69630a6dd51aa403\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:26:17-115
+205                android:value="com.google.firebase.components.ComponentRegistrar" />
+205-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\8a1ef8fe1a11059e69630a6dd51aa403\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:27:17-82
+206        </service>
+207
+208        <provider
+208-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:9-27:38
+209            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
+209-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:13-88
+210            android:authorities="com.Neurom.reactnativefirebaseappinitprovider"
+210-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:13-86
+211            android:exported="false"
+211-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:13-37
+212            android:initOrder="99" />
+212-->[:react-native-firebase_app] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-35
+213        <provider
+213-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:35:9-43:20
+214            android:name="com.ReactNativeBlobUtil.Utils.FileProvider"
+214-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:36:13-70
+215            android:authorities="com.Neurom.provider"
+215-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:37:13-60
+216            android:exported="false"
+216-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:38:13-37
+217            android:grantUriPermissions="true" >
+217-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:39:13-47
+218            <meta-data
+218-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:40:13-42:58
+219                android:name="android.support.FILE_PROVIDER_PATHS"
+219-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:41:17-67
+220                android:resource="@xml/provider_paths" />
+220-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:42:17-55
+221        </provider>
+222        <provider
+222-->[:react-native-image-picker] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-16:20
+223            android:name="com.imagepicker.ImagePickerProvider"
+223-->[:react-native-image-picker] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-63
+224            android:authorities="com.Neurom.imagepickerprovider"
+224-->[:react-native-image-picker] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-71
+225            android:exported="false"
+225-->[:react-native-image-picker] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+226            android:grantUriPermissions="true" >
+226-->[:react-native-image-picker] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-47
+227            <meta-data
+227-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:40:13-42:58
+228                android:name="android.support.FILE_PROVIDER_PATHS"
+228-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:41:17-67
+229                android:resource="@xml/imagepicker_provider_paths" />
+229-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:42:17-55
+230        </provider>
+231        <provider
+231-->[:react-native-performance] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-performance\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:39
+232            android:name="com.oblador.performance.StartTimeProvider"
+232-->[:react-native-performance] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-performance\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-69
+233            android:authorities="com.Neurom.start.time.provider"
+233-->[:react-native-performance] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-performance\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-71
+234            android:exported="false"
+234-->[:react-native-performance] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-performance\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+235            android:initOrder="200" />
+235-->[:react-native-performance] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-performance\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-36
+236        <provider
+236-->[:react-native-share] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-share\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-16:20
+237            android:name="cl.json.RNShareFileProvider"
+237-->[:react-native-share] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-share\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-55
+238            android:authorities="com.Neurom.rnshare.fileprovider"
+238-->[:react-native-share] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-share\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-72
+239            android:exported="false"
+239-->[:react-native-share] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-share\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+240            android:grantUriPermissions="true" >
+240-->[:react-native-share] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-share\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-47
+241            <meta-data
+241-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:40:13-42:58
+242                android:name="android.support.FILE_PROVIDER_PATHS"
+242-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:41:17-67
+243                android:resource="@xml/share_download_paths" />
+243-->[:react-native-blob-util] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-blob-util\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:42:17-55
+244        </provider> <!-- The main service, handles playback, playlists and media buttons -->
+245        <service
+245-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:9-22:19
+246            android:name="com.doublesymmetry.trackplayer.service.MusicService"
+246-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-79
+247            android:enabled="true"
+247-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-35
+248            android:exported="true"
+248-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-36
+249            android:foregroundServiceType="mediaPlayback" >
+249-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-58
+250            <intent-filter>
+250-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-21:29
+251                <action android:name="android.intent.action.MEDIA_BUTTON" />
+251-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:17-77
+251-->[:react-native-track-player] C:\Users\pitti\Downloads\Neurom\node_modules\react-native-track-player\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:25-74
+252            </intent-filter>
+253        </service>
+254
+255        <activity
+255-->[com.facebook.react:react-android:0.74.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\408527ca30a0537bd8702267c7f3de3b\transformed\jetified-react-android-0.74.2-debug\AndroidManifest.xml:19:9-21:40
+256            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+256-->[com.facebook.react:react-android:0.74.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\408527ca30a0537bd8702267c7f3de3b\transformed\jetified-react-android-0.74.2-debug\AndroidManifest.xml:20:13-77
+257            android:exported="false" />
+257-->[com.facebook.react:react-android:0.74.2] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\408527ca30a0537bd8702267c7f3de3b\transformed\jetified-react-android-0.74.2-debug\AndroidManifest.xml:21:13-37
+258
+259        <provider
+259-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:29:9-37:20
+260            android:name="androidx.startup.InitializationProvider"
+260-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:30:13-67
+261            android:authorities="com.Neurom.androidx-startup"
+261-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:31:13-68
+262            android:exported="false" >
+262-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:32:13-37
+263            <meta-data
+263-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:34:13-36:52
+264                android:name="androidx.work.WorkManagerInitializer"
+264-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:35:17-68
+265                android:value="androidx.startup" />
+265-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:36:17-49
+266            <meta-data
+266-->[androidx.emoji2:emoji2:1.3.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\746205b603722b3e4820e9629b70d5d8\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+267                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+267-->[androidx.emoji2:emoji2:1.3.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\746205b603722b3e4820e9629b70d5d8\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+268                android:value="androidx.startup" />
+268-->[androidx.emoji2:emoji2:1.3.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\746205b603722b3e4820e9629b70d5d8\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+269            <meta-data
+269-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\eb4ba9c18d7c42fa1e8b54cb0411d8ad\transformed\jetified-lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+270                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+270-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\eb4ba9c18d7c42fa1e8b54cb0411d8ad\transformed\jetified-lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+271                android:value="androidx.startup" />
+271-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\eb4ba9c18d7c42fa1e8b54cb0411d8ad\transformed\jetified-lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+272            <meta-data
+272-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:29:13-31:52
+273                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+273-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:30:17-85
+274                android:value="androidx.startup" />
+274-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:31:17-49
+275        </provider>
+276
+277        <service
+277-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:39:9-45:35
+278            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+278-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:40:13-88
+279            android:directBootAware="false"
+279-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:41:13-44
+280            android:enabled="@bool/enable_system_alarm_service_default"
+280-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:42:13-72
+281            android:exported="false" />
+281-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:43:13-37
+282        <service
+282-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:46:9-52:35
+283            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+283-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:47:13-84
+284            android:directBootAware="false"
+284-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:48:13-44
+285            android:enabled="@bool/enable_system_job_service_default"
+285-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:49:13-70
+286            android:exported="true"
+286-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:50:13-36
+287            android:permission="android.permission.BIND_JOB_SERVICE" />
+287-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:51:13-69
+288        <service
+288-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:53:9-59:35
+289            android:name="androidx.work.impl.foreground.SystemForegroundService"
+289-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:54:13-81
+290            android:directBootAware="false"
+290-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:55:13-44
+291            android:enabled="@bool/enable_system_foreground_service_default"
+291-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:56:13-77
+292            android:exported="false" />
+292-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:57:13-37
+293
+294        <receiver
+294-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:61:9-66:35
+295            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+295-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:62:13-88
+296            android:directBootAware="false"
+296-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:63:13-44
+297            android:enabled="true"
+297-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:64:13-35
+298            android:exported="false" />
+298-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:65:13-37
+299        <receiver
+299-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:67:9-77:20
+300            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+300-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:68:13-106
+301            android:directBootAware="false"
+301-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:69:13-44
+302            android:enabled="false"
+302-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:70:13-36
+303            android:exported="false" >
+303-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:71:13-37
+304            <intent-filter>
+304-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:73:13-76:29
+305                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+305-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:74:17-87
+305-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:74:25-84
+306                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+306-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:75:17-90
+306-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:75:25-87
+307            </intent-filter>
+308        </receiver>
+309        <receiver
+309-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:78:9-88:20
+310            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+310-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:79:13-104
+311            android:directBootAware="false"
+311-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:80:13-44
+312            android:enabled="false"
+312-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:81:13-36
+313            android:exported="false" >
+313-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:82:13-37
+314            <intent-filter>
+314-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:84:13-87:29
+315                <action android:name="android.intent.action.BATTERY_OKAY" />
+315-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:85:17-77
+315-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:85:25-74
+316                <action android:name="android.intent.action.BATTERY_LOW" />
+316-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:86:17-76
+316-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:86:25-73
+317            </intent-filter>
+318        </receiver>
+319        <receiver
+319-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:89:9-99:20
+320            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+320-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:90:13-104
+321            android:directBootAware="false"
+321-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:91:13-44
+322            android:enabled="false"
+322-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:92:13-36
+323            android:exported="false" >
+323-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:93:13-37
+324            <intent-filter>
+324-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:95:13-98:29
+325                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+325-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:96:17-83
+325-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:96:25-80
+326                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+326-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:97:17-82
+326-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:97:25-79
+327            </intent-filter>
+328        </receiver>
+329        <receiver
+329-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:100:9-109:20
+330            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+330-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:101:13-103
+331            android:directBootAware="false"
+331-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:102:13-44
+332            android:enabled="false"
+332-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:103:13-36
+333            android:exported="false" >
+333-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:104:13-37
+334            <intent-filter>
+334-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:106:13-108:29
+335                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+335-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:107:17-79
+335-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:107:25-76
+336            </intent-filter>
+337        </receiver>
+338        <receiver
+338-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:110:9-121:20
+339            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+339-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:111:13-88
+340            android:directBootAware="false"
+340-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:112:13-44
+341            android:enabled="false"
+341-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:113:13-36
+342            android:exported="false" >
+342-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:114:13-37
+343            <intent-filter>
+343-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:116:13-120:29
+344                <action android:name="android.intent.action.BOOT_COMPLETED" />
+344-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:17-79
+344-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:25-76
+345                <action android:name="android.intent.action.TIME_SET" />
+345-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:118:17-73
+345-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:118:25-70
+346                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+346-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:119:17-81
+346-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:119:25-78
+347            </intent-filter>
+348        </receiver>
+349        <receiver
+349-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:122:9-131:20
+350            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+350-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:123:13-99
+351            android:directBootAware="false"
+351-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:124:13-44
+352            android:enabled="@bool/enable_system_alarm_service_default"
+352-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:125:13-72
+353            android:exported="false" >
+353-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:126:13-37
+354            <intent-filter>
+354-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:128:13-130:29
+355                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+355-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:129:17-98
+355-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:129:25-95
+356            </intent-filter>
+357        </receiver>
+358        <receiver
+358-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:132:9-142:20
+359            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+359-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:133:13-78
+360            android:directBootAware="false"
+360-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:134:13-44
+361            android:enabled="true"
+361-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:135:13-35
+362            android:exported="true"
+362-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:136:13-36
+363            android:permission="android.permission.DUMP" >
+363-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:137:13-57
+364            <intent-filter>
+364-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:139:13-141:29
+365                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+365-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:140:17-88
+365-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:140:25-85
+366            </intent-filter>
+367        </receiver>
+368
+369        <activity
+369-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:23:9-27:75
+370            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+370-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:24:13-93
+371            android:excludeFromRecents="true"
+371-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:25:13-46
+372            android:exported="false"
+372-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:26:13-37
+373            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+373-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:27:13-72
+374        <!--
+375            Service handling Google Sign-In user revocation. For apps that do not integrate with
+376            Google Sign-In, this service will never be started.
+377        -->
+378        <service
+378-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:33:9-37:51
+379            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+379-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:34:13-89
+380            android:exported="true"
+380-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:35:13-36
+381            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+381-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:36:13-107
+382            android:visibleToInstantApps="true" />
+382-->[com.google.android.gms:play-services-auth:21.4.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1630b11676f4bbbc74f4c4b955ffe063\transformed\jetified-play-services-auth-21.4.0\AndroidManifest.xml:37:13-48
+383
+384        <meta-data
+384-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\3ee4a35cc5c431a8c588f566658968d0\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:11:9-13:43
+385            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+385-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\3ee4a35cc5c431a8c588f566658968d0\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:12:13-84
+386            android:value="GlideModule" />
+386-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\3ee4a35cc5c431a8c588f566658968d0\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:13:13-40
+387
+388        <receiver
+388-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:29:9-40:20
+389            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+389-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:30:13-78
+390            android:exported="true"
+390-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:31:13-36
+391            android:permission="com.google.android.c2dm.permission.SEND" >
+391-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:32:13-73
+392            <intent-filter>
+392-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-29:29
+393                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+393-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:17-81
+393-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:25-78
+394            </intent-filter>
+395
+396            <meta-data
+396-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:37:13-39:40
+397                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+397-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:38:17-92
+398                android:value="true" />
+398-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:39:17-37
+399        </receiver>
+400        <!--
+401             FirebaseMessagingService performs security checks at runtime,
+402             but set to not exported to explicitly avoid allowing another app to call it.
+403        -->
+404        <service
+404-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:46:9-53:19
+405            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+405-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:47:13-82
+406            android:directBootAware="true"
+406-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:48:13-43
+407            android:exported="false" >
+407-->[com.google.firebase:firebase-messaging:25.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\6a9345559e75db87f5c58cb6fd695777\transformed\jetified-firebase-messaging-25.0.1\AndroidManifest.xml:49:13-37
+408            <intent-filter android:priority="-500" >
+408-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-20:29
+409                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+409-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:17-78
+409-->[:react-native-firebase_messaging] C:\Users\pitti\Downloads\Neurom\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:25-75
+410            </intent-filter>
+411        </service>
+412
+413        <activity
+413-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\a3ecd5cd0cb45eff81c55bfcfe492c41\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:9-173
+414            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+414-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\a3ecd5cd0cb45eff81c55bfcfe492c41\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:19-85
+415            android:exported="false"
+415-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\a3ecd5cd0cb45eff81c55bfcfe492c41\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:146-170
+416            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+416-->[com.google.android.gms:play-services-base:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\a3ecd5cd0cb45eff81c55bfcfe492c41\transformed\jetified-play-services-base-18.5.0\AndroidManifest.xml:5:86-145
+417
+418        <provider
+418-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:23:9-28:39
+419            android:name="com.google.firebase.provider.FirebaseInitProvider"
+419-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:24:13-77
+420            android:authorities="com.Neurom.firebaseinitprovider"
+420-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:25:13-72
+421            android:directBootAware="true"
+421-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:26:13-43
+422            android:exported="false"
+422-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:27:13-37
+423            android:initOrder="100" />
+423-->[com.google.firebase:firebase-common:22.0.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\e101c57b43972a7f5543acb1362858f5\transformed\jetified-firebase-common-22.0.1\AndroidManifest.xml:28:13-36
+424
+425        <meta-data
+425-->[com.google.android.gms:play-services-basement:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1ac29064be318101f95f57b6158f2480\transformed\jetified-play-services-basement-18.5.0\AndroidManifest.xml:21:9-23:69
+426            android:name="com.google.android.gms.version"
+426-->[com.google.android.gms:play-services-basement:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1ac29064be318101f95f57b6158f2480\transformed\jetified-play-services-basement-18.5.0\AndroidManifest.xml:22:13-58
+427            android:value="@integer/google_play_services_version" />
+427-->[com.google.android.gms:play-services-basement:18.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\1ac29064be318101f95f57b6158f2480\transformed\jetified-play-services-basement-18.5.0\AndroidManifest.xml:23:13-66
+428
+429        <service
+429-->[androidx.room:room-runtime:2.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\252da7d53c50ccb7f5525604bf7e31bd\transformed\room-runtime-2.5.0\AndroidManifest.xml:24:9-28:63
+430            android:name="androidx.room.MultiInstanceInvalidationService"
+430-->[androidx.room:room-runtime:2.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\252da7d53c50ccb7f5525604bf7e31bd\transformed\room-runtime-2.5.0\AndroidManifest.xml:25:13-74
+431            android:directBootAware="true"
+431-->[androidx.room:room-runtime:2.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\252da7d53c50ccb7f5525604bf7e31bd\transformed\room-runtime-2.5.0\AndroidManifest.xml:26:13-43
+432            android:exported="false" />
+432-->[androidx.room:room-runtime:2.5.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\252da7d53c50ccb7f5525604bf7e31bd\transformed\room-runtime-2.5.0\AndroidManifest.xml:27:13-37
+433
+434        <receiver
+434-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:34:9-52:20
+435            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+435-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:35:13-76
+436            android:directBootAware="false"
+436-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:36:13-44
+437            android:enabled="true"
+437-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:37:13-35
+438            android:exported="true"
+438-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:38:13-36
+439            android:permission="android.permission.DUMP" >
+439-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:39:13-57
+440            <intent-filter>
+440-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:40:13-42:29
+441                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+441-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:41:17-91
+441-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:41:25-88
+442            </intent-filter>
+443            <intent-filter>
+443-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:43:13-45:29
+444                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+444-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:44:17-85
+444-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:44:25-82
+445            </intent-filter>
+446            <intent-filter>
+446-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:46:13-48:29
+447                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+447-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:47:17-88
+447-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:47:25-85
+448            </intent-filter>
+449            <intent-filter>
+449-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:49:13-51:29
+450                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+450-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:50:17-95
+450-->[androidx.profileinstaller:profileinstaller:1.4.1] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f1d8162c0e6897793da149ae711a7c63\transformed\jetified-profileinstaller-1.4.1\AndroidManifest.xml:50:25-92
+451            </intent-filter>
+452        </receiver>
+453
+454        <service
+454-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:28:9-34:19
+455            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+455-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:29:13-103
+456            android:exported="false" >
+456-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:30:13-37
+457            <meta-data
+457-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:31:13-33:39
+458                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+458-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:32:17-94
+459                android:value="cct" />
+459-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\f53b1442c9ec4d491799817d9d286d3a\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:33:17-36
+460        </service>
+461        <service
+461-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:26:9-30:19
+462            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+462-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:27:13-117
+463            android:exported="false"
+463-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:28:13-37
+464            android:permission="android.permission.BIND_JOB_SERVICE" >
+464-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:29:13-69
+465        </service>
+466
+467        <receiver
+467-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:32:9-34:40
+468            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+468-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:33:13-132
+469            android:exported="false" />
+469-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\ace14758073b50df320dc5a609a5a5b0\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:34:13-37
+470
+471        <meta-data
+471-->[com.facebook.soloader:soloader:0.10.5] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\af7c56a8ead6571d6ca06fd362b28104\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:12:9-14:37
+472            android:name="com.facebook.soloader.enabled"
+472-->[com.facebook.soloader:soloader:0.10.5] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\af7c56a8ead6571d6ca06fd362b28104\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:13:13-57
+473            android:value="false" /> <!-- Receiver Service -->
+473-->[com.facebook.soloader:soloader:0.10.5] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\af7c56a8ead6571d6ca06fd362b28104\transformed\jetified-soloader-0.10.5\AndroidManifest.xml:14:13-34
+474        <service
+474-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:28:9-30:40
+475            android:name="app.notifee.core.ReceiverService"
+475-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:29:13-60
+476            android:exported="false" />
+476-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:30:13-37
+477
+478        <activity
+478-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:32:9-38:75
+479            android:name="app.notifee.core.NotificationReceiverActivity"
+479-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:33:13-73
+480            android:excludeFromRecents="true"
+480-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:34:13-46
+481            android:exported="true"
+481-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:35:13-36
+482            android:noHistory="true"
+482-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:36:13-37
+483            android:taskAffinity=""
+483-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:37:13-36
+484            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- Foreground Service -->
+484-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:38:13-72
+485        <service
+485-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:41:9-44:60
+486            android:name="app.notifee.core.ForegroundService"
+486-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:42:13-62
+487            android:exported="false"
+487-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:43:13-37
+488            android:foregroundServiceType="shortService" />
+488-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:44:13-57
+489
+490        <receiver
+490-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:46:9-54:20
+491            android:name="app.notifee.core.RebootBroadcastReceiver"
+491-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:47:13-68
+492            android:exported="false" >
+492-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:48:13-37
+493            <intent-filter>
+493-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:49:13-53:29
+494                <action android:name="android.intent.action.BOOT_COMPLETED" />
+494-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:17-79
+494-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:25-76
+495                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+495-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:51:17-82
+495-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:51:25-79
+496                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+496-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:52:17-82
+496-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:52:25-79
+497            </intent-filter>
+498        </receiver>
+499        <receiver
+499-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:55:9-61:20
+500            android:name="app.notifee.core.AlarmPermissionBroadcastReceiver"
+500-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:56:13-77
+501            android:exported="true" >
+501-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:57:13-36
+502            <intent-filter>
+502-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:58:13-60:29
+503                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+503-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:59:17-107
+503-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:59:25-104
+504            </intent-filter>
+505        </receiver>
+506        <receiver
+506-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:62:9-70:20
+507            android:name="app.notifee.core.NotificationAlarmReceiver"
+507-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:63:13-70
+508            android:exported="false" >
+508-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:64:13-37
+509            <intent-filter>
+509-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:49:13-53:29
+510                <action android:name="android.intent.action.BOOT_COMPLETED" />
+510-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:17-79
+510-->[androidx.work:work-runtime:2.8.0] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\65a71d2e7915d7be61f22f71e694f287\transformed\work-runtime-2.8.0\AndroidManifest.xml:117:25-76
+511                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+511-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:51:17-82
+511-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:51:25-79
+512                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+512-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:52:17-82
+512-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:52:25-79
+513            </intent-filter>
+514        </receiver> <!-- Broadcast Receiver -->
+515        <receiver
+515-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:73:9-81:20
+516            android:name="app.notifee.core.BlockStateBroadcastReceiver"
+516-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:74:13-72
+517            android:exported="false" >
+517-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:75:13-37
+518            <intent-filter>
+518-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:76:13-80:29
+519                <action android:name="android.app.action.APP_BLOCK_STATE_CHANGED" />
+519-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:77:17-85
+519-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:77:25-82
+520                <action android:name="android.app.action.NOTIFICATION_CHANNEL_BLOCK_STATE_CHANGED" />
+520-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:78:17-102
+520-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:78:25-99
+521                <action android:name="android.app.action.NOTIFICATION_CHANNEL_GROUP_BLOCK_STATE_CHANGED" />
+521-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:79:17-108
+521-->[app.notifee:core:202108261754] C:\Users\pitti\scoop\apps\gradle\current\.gradle\caches\transforms-4\2fd8337182c2b6d3af20c978adfd0098\transformed\jetified-core-202108261754\AndroidManifest.xml:79:25-105
+522            </intent-filter>
+523        </receiver>
+524    </application>
+525
+526</manifest>

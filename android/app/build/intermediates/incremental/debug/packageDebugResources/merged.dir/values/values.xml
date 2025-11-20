@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#7f5ecf</color>
+    <integer name="react_native_dev_server_port">8081</integer>
+    <string name="app_name">Neurom</string>
+    <string name="gcm_defaultSenderId" translatable="false">259810060771</string>
+    <string name="google_api_key" translatable="false">AIzaSyBPSiYj1bfbuj3_vBV9YYA0zk0t7bhnPcI</string>
+    <string name="google_app_id" translatable="false">1:259810060771:android:92afa49cb3666c123918d6</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBPSiYj1bfbuj3_vBV9YYA0zk0t7bhnPcI</string>
+    <string name="google_storage_bucket" translatable="false">Neurom-e9b53.firebasestorage.app</string>
+    <string name="project_id" translatable="false">Neurom-e9b53</string>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+
+        
+        <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:textViewStyle">@style/DefaultTextView</item>
+        <item name="android:editTextStyle">@style/DefaultEditText</item>
+        <item name="android:buttonStyle">@style/DefaultButton</item>
+    </style>
+    <style name="DefaultButton" parent="@android:style/Widget.Button">
+        <item name="android:fontFamily">@font/inter_bold</item>
+    </style>
+    <style name="DefaultEditText" parent="@android:style/Widget.EditText">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+    <style name="DefaultTextView" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style>
+</resources>
