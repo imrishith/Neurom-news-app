@@ -19,7 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import io from "socket.io-client";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Colors from "../../constants/colors";
-import { fw, fh, ff } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 import TopBar from "../../components/TopBar";
 import SidebarPanel from "../Sidebar/SidebarPanel";
 import { useOnboarding } from "../../context/OnboardingContext";
@@ -312,7 +312,7 @@ const LiveUpdatesScreen = () => {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: Colors.deepPurple },
   bgImage: { flex: 1 },
-  container: { flex: 1, zIndex: 2, top: fh(15) },
+  container: { flex: 1, zIndex: 2, top: fh(getLayoutConfig().isTablet ? 12 : 15) },
 
   // 🔹 Overlay
   overlay: {
@@ -334,121 +334,134 @@ const styles = StyleSheet.create({
   // 🔹 Top
   topBarWrap: {
     backgroundColor: "transparent",
-    paddingVertical: fh(8),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
     zIndex: 2,
   },
   liveNowButton: {
     position: "absolute",
-    right: fw(10),
-    top: fh(60),
+    right: fw(getLayoutConfig().isTablet ? 16 : 10),
+    top: fh(getLayoutConfig().isTablet ? 64 : 60),
     backgroundColor: "#D73C3E",
-    paddingHorizontal: fw(14),
-    paddingVertical: fh(4),
-    borderRadius: fw(16),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 18 : 14),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
+    borderRadius: fr(getLayoutConfig().isTablet ? 20 : 16),
     zIndex: 2,
   },
   liveNowText: {
     color: "#fff",
-    fontSize: ff(12),
-    marginTop: fh(-2),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
+    marginTop: fh(getLayoutConfig().isTablet ? 0 : -2),
+    includeFontPadding: false,
   },
 
   bannerTitleWrap: {
     alignItems: "center",
-    marginTop: fh(40),
-    marginBottom: fh(18),
+    marginTop: fh(getLayoutConfig().isTablet ? 44 : 40),
+    marginBottom: fh(getLayoutConfig().isTablet ? 22 : 18),
     zIndex: 2,
+    paddingHorizontal: getLayoutConfig().contentPadding,
   },
   bannerTitle: {
     color: Colors.textcolor,
-    fontSize: ff(22),
-    fontWeight: '700'
+    fontSize: ff(getLayoutConfig().isTablet ? 24 : 22),
+    fontWeight: '700',
+    includeFontPadding: false,
+    textAlign: 'center',
   },
 
   listWrap: { flex: 1, position: "relative", zIndex: 2 },
   timelineRail: {
     position: "absolute",
-    top: fh(20),
-    bottom: fh(100),
-    width: fw(2),
+    top: fh(getLayoutConfig().isTablet ? 24 : 20),
+    bottom: fh(getLayoutConfig().isTablet ? 120 : 100),
+    width: fw(getLayoutConfig().isTablet ? 3 : 2),
     backgroundColor: "rgba(255,255,255,0.45)",
     zIndex: 0,
   },
-  timelineContainer: { paddingHorizontal: fw(16), paddingBottom: fh(20) },
+  timelineContainer: { 
+    paddingHorizontal: getLayoutConfig().contentPadding, 
+    paddingBottom: fh(getLayoutConfig().isTablet ? 24 : 20) 
+  },
   timelineItem: {
     flexDirection: "row",
-    alignItems: "flex-start",  // ✅ ensures cube & card align vertically
-    marginBottom: fh(12),
-    minHeight: fh(80),
+    alignItems: "flex-start",
+    marginBottom: fh(getLayoutConfig().isTablet ? 16 : 12),
+    minHeight: fh(getLayoutConfig().isTablet ? 90 : 80),
     position: "relative",
   },
   timelineIndicatorContainer: {
     position: "absolute",
     left: 0,
-    top: fh(1),           // ✅ aligns with card top
-    width: fw(28),
+    top: fh(getLayoutConfig().isTablet ? 2 : 1),
+    width: fw(getLayoutConfig().isTablet ? 32 : 28),
     alignItems: "center",
   },
-  cubeIcon: { width: fw(20), height: fw(20) },
-  updateRow: {
-    flexDirection: "column",    // ✅ stack card on top of time
-    marginLeft: fw(40),
-    alignItems: "flex-end",     // ✅ aligns time to the card’s right
-    marginBottom: fh(1),        // spacing between entries
+  cubeIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 24 : 20), 
+    height: fw(getLayoutConfig().isTablet ? 24 : 20) 
+  },
+updateRow: {
+    flexDirection: "column",
+    marginLeft: fw(getLayoutConfig().isTablet ? 44 : 40),
+    alignItems: "flex-end",
+    marginBottom: fh(getLayoutConfig().isTablet ? 4 : 1),
   },
 
   card: {
     backgroundColor: Colors.deepPurple,
     width: "100%",
-    paddingHorizontal: fw(12),
-    paddingVertical: fh(10),
-    borderRadius: fw(16),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 14 : 10),
+    borderRadius: fr(getLayoutConfig().isTablet ? 20 : 16),
     position: "relative",
     zIndex: 100
   },
 
   cardTitle: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     color: Colors.textcolor,
-    lineHeight: fh(22),
-    marginTop: 0,              // ✅ remove any vertical offset
-    paddingTop: 0,             // ✅ ensure no extra space on first line
+    lineHeight: fh(getLayoutConfig().isTablet ? 24 : 22),
+    marginTop: 0,
+    paddingTop: 0,
+    includeFontPadding: false,
   },
 
   timeText: {
-    marginTop: fh(2),          // ✅ gap between card and time
+    marginTop: fh(getLayoutConfig().isTablet ? 4 : 2),
     color: "#fff",
-    fontSize: ff(10),
+    fontSize: ff(getLayoutConfig().isTablet ? 12 : 10),
     fontWeight: "600",
     opacity: 0.8,
-    alignSelf: "flex-end",     // ✅ right align below card
-    marginRight: fw(12),       // ✅ aligns perfectly under card right edge
+    alignSelf: "flex-end",
+    marginRight: fw(getLayoutConfig().isTablet ? 16 : 12),
+    includeFontPadding: false,
   },
 
   entryImage: {
     width: "100%",
-    height: fh(120),
-    borderRadius: fw(8),
-    marginTop: fh(8),
+    height: fh(getLayoutConfig().isTablet ? 140 : 120),
+    borderRadius: fr(getLayoutConfig().isTablet ? 12 : 8),
+    marginTop: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
 
   proceedButton: {
-    height: fh(50),
-    width: fw(120),
-    borderRadius: fw(8),
+    height: fh(getLayoutConfig().isTablet ? 56 : 50),
+    width: fw(getLayoutConfig().isTablet ? 140 : 120),
+    borderRadius: fr(getLayoutConfig().isTablet ? 12 : 8),
     alignItems: "center",
     justifyContent: "center",
     zIndex: 2,
   },
   buttonContent: { flexDirection: "row", alignItems: "center" },
   proceedText: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     color: "#fff",
-    marginRight: fw(8),
+    marginRight: fw(getLayoutConfig().isTablet ? 12 : 8),
+    includeFontPadding: false,
   },
   buttonIcon: {
-    width: fw(18),
-    height: fw(18),
+    width: fw(getLayoutConfig().isTablet ? 22 : 18),
+    height: fw(getLayoutConfig().isTablet ? 22 : 18),
     resizeMode: "contain",
     tintColor: "#fff",
   },

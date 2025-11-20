@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { fw, fh, ff } from "../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../utils/responsive";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../context/ThemeContext";
 import { useOnboarding } from "../context/OnboardingContext";
@@ -174,53 +174,65 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: fw(16),
-    paddingVertical: fh(12),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingVertical: fh(getLayoutConfig().isTablet ? 16 : 12),
+    height: getLayoutConfig().headerHeight,
     position: "relative",
   },
   backButton: {
     position: "absolute",
-    left: fw(16),
-    padding: fw(4),
+    left: getLayoutConfig().contentPadding,
+    padding: fw(6),
+    zIndex: 10,
   },
   headerTitle: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     textAlign: "center",
+    fontWeight: "600",
+    includeFontPadding: false,
   },
   listContent: {
-    paddingHorizontal: fw(16),
-    marginTop: fh(20),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20),
     paddingBottom: fh(40),
+    gap: fh(getLayoutConfig().isTablet ? 16 : 12),
   },
   card: {
     flexDirection: "row",
-    borderRadius: fw(10),
-    padding: fw(10),
-    marginBottom: fh(12),
+    borderRadius: fr(getLayoutConfig().isTablet ? 12 : 10),
+    padding: fw(getLayoutConfig().isTablet ? 16 : 10),
     alignItems: "center",
+    minHeight: fh(getLayoutConfig().isTablet ? 80 : 70),
   },
   thumbnail: {
-    width: fw(60),
-    height: fh(60),
-    borderRadius: fw(8),
+    width: fw(getLayoutConfig().isTablet ? 80 : 60),
+    height: fh(getLayoutConfig().isTablet ? 80 : 60),
+    borderRadius: fr(getLayoutConfig().isTablet ? 12 : 8),
+    flexShrink: 0,
   },
   textContainer: {
     flex: 1,
-    marginLeft: fw(12),
+    marginLeft: fw(getLayoutConfig().isTablet ? 16 : 12),
+    justifyContent: "center",
   },
   title: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 20),
+    includeFontPadding: false,
   },
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: fh(120),
+    marginTop: fh(getLayoutConfig().isTablet ? 200 : 120),
+    paddingHorizontal: fw(40),
   },
   emptyText: {
-    fontSize: ff(15),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 15),
     marginTop: fh(12),
     textAlign: "center",
     opacity: 0.8,
+    lineHeight: ff(getLayoutConfig().isTablet ? 24 : 22),
+    includeFontPadding: false,
   },
   loader: {
     flex: 1,

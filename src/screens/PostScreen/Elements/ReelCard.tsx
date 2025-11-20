@@ -15,7 +15,7 @@ import Video from "react-native-video";
 import InteractionRow from "../../../components/InteractionRow";
 import { useOnboarding } from "../../../context/OnboardingContext";
 import helper from "./helper";
-import { fw, fh, ff, getTopInset} from "../../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../../utils/responsive";
 import ReportModal from "../../../components/Reportreel";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -330,7 +330,7 @@ const ReelCard: React.FC<ReelCardProps> = memo(
               <View style={styles.centerCircle}>
                 <Ionicons
                   name={isPaused ? "play" : "pause"}
-                  size={fw(26)}
+                  size={fw(getLayoutConfig().isTablet ? 30 : 26)}
                   color="#fff"
                 />
               </View>
@@ -403,7 +403,7 @@ const ReelCard: React.FC<ReelCardProps> = memo(
           <View style={[styles.OptionsContainer, {bottom:insets.bottom + fh(30)}]}>
             <InteractionRow
               stats={formattedStats}
-              iconSize={fw(28)}
+              iconSize={fw(getLayoutConfig().isTablet ? 32 : 28)}
               tintColor="#fff"
               compact
               contentType="videos"
@@ -467,18 +467,18 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "white",
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     marginBottom: fh(10),
   },
   retryButton: {
-    paddingHorizontal: fw(20),
-    paddingVertical: fh(10),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 24 : 20),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 12 : 10),
     backgroundColor: "#997DDF",
-    borderRadius: fw(20),
+    borderRadius: fw(getLayoutConfig().isTablet ? 24 : 20),
   },
   retryText: {
     color: "white",
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     fontWeight: "600",
   },
   centerOverlay: {
@@ -488,9 +488,9 @@ const styles = StyleSheet.create({
     zIndex: 60,
   },
   centerCircle: {
-    width: fw(50),
-    height: fw(50),
-    borderRadius: fw(25),
+    width: fw(getLayoutConfig().isTablet ? 56 : 50),
+    height: fw(getLayoutConfig().isTablet ? 56 : 50),
+    borderRadius: fr(getLayoutConfig().isTablet ? 28 : 25),
     backgroundColor: "rgba(0,0,0,0.4)",
     alignItems: "center",
     justifyContent: "center",
@@ -519,46 +519,46 @@ const styles = StyleSheet.create({
   // ✅ Bottom description positioned above slider
   bottomLeftDescription: {
     position: "absolute",
-    left: fw(16),
-    right: fw(90), // ✅ more space for right icons
+    left: fw(getLayoutConfig().isTablet ? 20 : 16),
+    right: fw(getLayoutConfig().isTablet ? 100 : 90), // ✅ more space for right icons
     zIndex: 10,
   },
   chip: {
     backgroundColor: "rgba(153,125,223,0.95)",
-    paddingHorizontal: fw(12),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 14 : 12),
     paddingVertical: hp('0.6%'),
-    borderRadius: fw(20),
+    borderRadius: fw(getLayoutConfig().isTablet ? 24 : 20),
     marginBottom: hp('0.8%'),
     alignSelf: "flex-start",
   },
   chipText: {
     color: "#fff",
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "600",
   },
   title: {
     color: "white",
-    fontSize: ff(17),
+    fontSize: ff(getLayoutConfig().isTablet ? 19 : 17),
     fontWeight: "700",
     marginBottom: hp('0.4%'),
-    lineHeight: ff(22),
+    lineHeight: ff(getLayoutConfig().isTablet ? 24 : 22),
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
   description: {
     color: "white",
-    fontSize: ff(13),
+    fontSize: ff(getLayoutConfig().isTablet ? 15 : 13),
     fontWeight: "400",
     textAlign: "left",
-    lineHeight: ff(18),
+    lineHeight: ff(getLayoutConfig().isTablet ? 20 : 18),
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
   seeMoreLess: {
     color: "#fff",
-    fontSize: ff(13),
+    fontSize: ff(getLayoutConfig().isTablet ? 15 : 13),
     fontWeight: "700",
     marginTop: hp('0.3%'),
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
@@ -569,17 +569,17 @@ const styles = StyleSheet.create({
   // ✅ Options positioned on right, aligned with description
   OptionsContainer: {
     position: "absolute",
-    right: fw(12),
+    right: fw(getLayoutConfig().isTablet ? 16 : 12),
     zIndex: 20,
   },
   tridotWrap: {
     marginTop: hp('1.5%'),
-    padding: fw(8),
+    padding: fw(getLayoutConfig().isTablet ? 10 : 8),
     alignItems: "center",
   },
   tridotIcon: {
-    width: fw(24),
-    height: fw(24),
+    width: fw(getLayoutConfig().isTablet ? 28 : 24),
+    height: fw(getLayoutConfig().isTablet ? 28 : 24),
     tintColor: "#fff",
   },
 });

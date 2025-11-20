@@ -1,6 +1,7 @@
 // components/CardDeck.tsx
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Dimensions, View, Text } from "react-native";
+import { fw, fh, ff, getLayoutConfig } from "../../utils/responsive";
 import {
   GestureDetector,
   Gesture,
@@ -174,13 +175,22 @@ export default function CardDeck({
 const { height: SCREEN_H } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  container: { flex: 1, width: "100%", alignItems: "center" },
-  empty: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: { 
+    flex: 1, 
+    width: "100%", 
+    alignItems: "center",
+    paddingHorizontal: getLayoutConfig().isTablet ? fw(20) : 0,
+  },
+  empty: { 
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center" 
+  },
   card: {
     position: "absolute",
     width: "100%",
-    height: SCREEN_H * 0.9,
-    borderRadius: 16,
+    height: SCREEN_H * (getLayoutConfig().isTablet ? 0.85 : 0.9),
+    borderRadius: getLayoutConfig().isTablet ? 20 : 16,
     overflow: "hidden",
   },
 });

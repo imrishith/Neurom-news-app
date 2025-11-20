@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Carousel from "../../components/Carousel";
 import AppHeader from "../../components/AppHeader";
 import GradientScreen from "../../components/GradientScreen";
-import { fw, fh, ff } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 import { useTheme } from "../../context/ThemeContext";
 import { useOnboarding } from "../../context/OnboardingContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -596,124 +596,128 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   carouselWrapper: {
     flex: 1,
-    marginTop: fh(10),
-    paddingHorizontal: fw(8),
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 10),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 8),
     alignItems: "center",
     paddingBottom: fh(20),
   },
   pollCard: {
-    width: '90%',
-    maxWidth: fw(360),
-    borderRadius: fw(12),
-    marginBottom: fh(20),
+    width: getLayoutConfig().isTablet ? '80%' : '90%',
+    maxWidth: fw(getLayoutConfig().isTablet ? 420 : 360),
+    borderRadius: fr(12),
+    marginBottom: fh(getLayoutConfig().isTablet ? 24 : 20),
     alignSelf: 'center',
-    minHeight: fh(371),
+    minHeight: fh(getLayoutConfig().isTablet ? 400 : 371),
   },
   pollCardContent: {
     flex: 1,
   },
   pollTextContainer: { 
     flex: 1, 
-    padding: fw(16), 
+    padding: fw(getLayoutConfig().isTablet ? 20 : 16), 
     justifyContent: "space-between" 
   },
   pollImage: {
     width: "100%",
     aspectRatio: 16 / 9,
     resizeMode: "cover",
-    borderTopLeftRadius: fw(12),
-    borderTopRightRadius: fw(12),
+    borderTopLeftRadius: fr(12),
+    borderTopRightRadius: fr(12),
   },
   pollQuestion: { 
-    fontSize: ff(14), 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
     textAlign: 'center',
-    marginBottom: fh(20) 
+    marginBottom: fh(getLayoutConfig().isTablet ? 24 : 20),
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 18),
+    includeFontPadding: false,
   },
   pollTitleText: { 
-    fontSize: ff(14), 
-    textAlign: 'center' 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
+    textAlign: 'center',
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 18),
+    includeFontPadding: false,
   },
   buttonRow: { 
     flexDirection: "row", 
     justifyContent: "space-between", 
     gap: fw(10), 
-    marginTop: fh(20) 
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20) 
   },
   voteButton: {
     flex: 1,
-    minWidth: fw(80),
+    minWidth: fw(getLayoutConfig().isTablet ? 100 : 80),
     borderWidth: 1,
-    height: fh(50),
-    borderRadius: fw(8),
+    height: fh(getLayoutConfig().isTablet ? 56 : 50),
+    borderRadius: fr(8),
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: fw(5),
   },
   buttonText: {
-    fontSize: ff(14),
-    lineHeight: ff(18),
-    includeFontPadding: true,
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 18),
+    includeFontPadding: false,
     textAlignVertical: "center",
     letterSpacing: 0.2,
   },
   radioGroup: {
     flexDirection: "column",
-    gap: fh(10),
-    marginTop: fh(4),
+    gap: fh(getLayoutConfig().isTablet ? 14 : 10),
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 4),
   },
   radioOption: {
     flexDirection: "row",
     alignItems: "center",
-    gap: fw(10),
-    paddingVertical: fh(6),
+    gap: fw(getLayoutConfig().isTablet ? 14 : 10),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 8 : 6),
   },
   radioCircle: {
-    width: fw(15),
-    height: fw(15),
-    borderRadius: fw(10),
+    width: fw(getLayoutConfig().isTablet ? 18 : 15),
+    height: fw(getLayoutConfig().isTablet ? 18 : 15),
+    borderRadius: fw(getLayoutConfig().isTablet ? 12 : 10),
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
   },
   radioInnerCircle: {
-    width: fw(10),
-    height: fw(10),
-    borderRadius: fw(5),
+    width: fw(getLayoutConfig().isTablet ? 12 : 10),
+    height: fw(getLayoutConfig().isTablet ? 12 : 10),
+    borderRadius: fw(getLayoutConfig().isTablet ? 8 : 5),
   },
   radioLabel: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     flexShrink: 1,
-    lineHeight: fh(22),
+    lineHeight: fh(getLayoutConfig().isTablet ? 24 : 22),
     includeFontPadding: false,
   },
   ratingContainer: { 
     flexDirection: "row", 
     justifyContent: "center", 
-    marginVertical: fh(10), 
-    gap: fw(10) 
+    marginVertical: fh(getLayoutConfig().isTablet ? 14 : 10), 
+    gap: fw(getLayoutConfig().isTablet ? 14 : 10) 
   },
   starButton: { 
-    padding: fw(6) 
+    padding: fw(getLayoutConfig().isTablet ? 8 : 6) 
   },
   starIcon: { 
-    width: fw(32), 
-    height: fw(32) 
+    width: fw(getLayoutConfig().isTablet ? 36 : 32), 
+    height: fw(getLayoutConfig().isTablet ? 36 : 32) 
   },
   progressRow: { 
     flexDirection: "row", 
     alignItems: "center", 
-    marginVertical: fh(6), 
-    gap: fw(8) 
+    marginVertical: fh(getLayoutConfig().isTablet ? 8 : 6), 
+    gap: fw(getLayoutConfig().isTablet ? 12 : 8) 
   },
   progressBar: { 
-    height: fh(14), 
-    borderRadius: fw(8), 
+    height: fh(getLayoutConfig().isTablet ? 16 : 14), 
+    borderRadius: fr(8), 
     overflow: "hidden", 
     flex: 5 
   },
   progressBarFill: { 
     height: "100%", 
-    borderRadius: fw(8) 
+    borderRadius: fr(8) 
   },
 });
 

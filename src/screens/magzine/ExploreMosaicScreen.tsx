@@ -8,7 +8,7 @@ import GradientScreen from "../../components/GradientScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
 import { useTheme } from "../../context/ThemeContext";
-import { fw, fh, ff } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 import SidebarPanel from "../Sidebar/SidebarPanel";
 import { useMagazinesStore } from "../../../utils/store/useMagazinesStore";
 import { useOnboarding } from "../../context/OnboardingContext";
@@ -408,17 +408,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.deepPurple,
+    paddingHorizontal: fw(20),
   },
   content: {
     paddingHorizontal: PAD_H,
-    paddingTop: fh(18),
+    paddingTop: fh(getLayoutConfig().isTablet ? 22 : 18),
     paddingBottom: fh(100),
     backgroundColor: "transparent",
-    marginTop: fh(30),
+    marginTop: fh(getLayoutConfig().isTablet ? 34 : 30),
   },
-  columnsRow: { flexDirection: "row", alignItems: "flex-start" },
+  columnsRow: { 
+    flexDirection: "row", 
+    alignItems: "flex-start",
+    gap: GAP,
+  },
   card: {
-    borderRadius: fw(10),
+    borderRadius: fr(getLayoutConfig().isTablet ? 14 : 10),
     backgroundColor: Colors.deepPurple,
     overflow: "hidden",
     elevation: 3,
@@ -430,39 +435,41 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     position: "absolute",
-    left: fw(10),
-    right: fw(10),
-    bottom: fh(28),
-    fontSize: ff(12),
+    left: fw(getLayoutConfig().isTablet ? 14 : 10),
+    right: fw(getLayoutConfig().isTablet ? 14 : 10),
+    bottom: fh(getLayoutConfig().isTablet ? 32 : 28),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "600",
     color: "#fff",
+    includeFontPadding: false,
   },
   readBadge: {
     position: "absolute",
-    bottom: fh(6),
-    alignSelf: "center", // ✅ centers horizontally within parent
+    bottom: fh(getLayoutConfig().isTablet ? 8 : 6),
+    alignSelf: "center",
     backgroundColor: Colors.lavenderPurple,
-    paddingHorizontal: fw(8),
-    paddingVertical: fh(2),
-    borderRadius: fw(6),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 12 : 8),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 4 : 2),
+    borderRadius: fr(getLayoutConfig().isTablet ? 8 : 6),
     opacity: 0.8
   },
   readBadgeText: {
     color: "#fff",
-    fontSize: ff(12),
-    fontWeight: '700'
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
+    fontWeight: '700',
+    includeFontPadding: false,
 
   },
   interactionsContainer: {
     position: "absolute",
     alignSelf: "center",
-    bottom: fh(10),
-    width: fw(277),
+    bottom: fh(getLayoutConfig().isTablet ? 14 : 10),
+    width: fw(getLayoutConfig().isTablet ? 320 : 277),
     zIndex: 10,
   },
   topbarInner: {
-    marginTop: fh(10),
-    marginBottom: fh(-20),
+    marginTop: fh(getLayoutConfig().isTablet ? 14 : 10),
+    marginBottom: fh(getLayoutConfig().isTablet ? -16 : -20),
   },
 });
 

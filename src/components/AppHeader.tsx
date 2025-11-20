@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '../constants/colors';
-import { fw, fh, ff } from '../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../utils/responsive';
 
 interface AppHeaderProps {
   title?: string;
@@ -47,7 +47,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     <View
       style={[
         styles.container,
-        { backgroundColor, paddingTop: topPad, height: fh(56) + topPad },
+        { backgroundColor, paddingTop: topPad, height: getLayoutConfig().headerHeight + topPad },
         containerStyle,
         showBottomDivider && styles.divider,
       ]}
@@ -98,30 +98,30 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    // height is set dynamically (56 + topPad)
+    // height is set dynamically based on device type
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: fw(12),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
     justifyContent: 'space-between',
   },
   sideContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    
   },
   centerContainer: {
     flex: 1,
     alignItems: 'center',
   },
   title: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: '600',
     color: Colors.textcolor,
+    includeFontPadding: false,
   },
   iconWrapper: {
-    paddingHorizontal: fw(4),
-    paddingVertical: fh(4),
-    marginRight: fw(8),  
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 6 : 4),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
+    marginRight: fw(getLayoutConfig().isTablet ? 12 : 8),  
   },
   divider: {
     borderBottomWidth: 1,

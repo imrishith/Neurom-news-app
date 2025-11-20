@@ -10,7 +10,7 @@ import {
   Image,
   ImageSourcePropType,
 } from 'react-native';
-import { fw, fh, ff } from '../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 
 interface TabItem {
@@ -185,14 +185,14 @@ const TopBar: React.FC<TopBarProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: 'transparent',
-    paddingVertical: fh(8),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
     // bottom: fh(2),
   },
   scrollContainer: {
     // paddingHorizontal: fw(12),
   },
   plusFallback: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: 'bold',
   },
   tabContentColumn: {
@@ -201,24 +201,25 @@ const styles = StyleSheet.create({
   tabRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: fw(6),
+    gap: fw(getLayoutConfig().isTablet ? 8 : 6),
   },
   tabIcon: {
-    width: fw(18),
-    height: fw(18),
+    width: fw(getLayoutConfig().isTablet ? 22 : 18),
+    height: fw(getLayoutConfig().isTablet ? 22 : 18),
     top: fh(1),
   },
   activeTabIcon: {},
   label: {
-    fontSize: ff(15),
-    lineHeight: fh(22)
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 15),
+    lineHeight: fh(getLayoutConfig().isTablet ? 24 : 22),
+    includeFontPadding: false,
   },
   activeLabel: {
     fontWeight: '600',
   },
   tab: {
-    paddingHorizontal: fw(6),
-    paddingVertical: fh(4),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 8 : 6),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
   },
   activeTab: {},
 });

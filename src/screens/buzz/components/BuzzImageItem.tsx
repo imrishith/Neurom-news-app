@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import FastImage from "react-native-fast-image";
+import { fw, fh, ff, fr } from "../../../../utils/responsive";
 
 type Props = { item: any; imageHeight: number };
 

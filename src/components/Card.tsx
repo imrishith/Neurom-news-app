@@ -10,7 +10,7 @@ import {
   StyleProp,
 } from 'react-native';
 import Colors from '../constants/colors';
-import { fw, fh, ff } from '../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../utils/responsive';
 
 interface CardProps {
   title?: string;
@@ -77,9 +77,10 @@ const Card: React.FC<CardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    padding: fw(16),
-    marginVertical: fh(12),
-    width: '90%',
+    padding: fw(getLayoutConfig().isTablet ? 24 : 16),
+    marginVertical: fh(getLayoutConfig().isTablet ? 16 : 12),
+    width: getLayoutConfig().isTablet ? '80%' : '90%',
+    maxWidth: fw(getLayoutConfig().isTablet ? 500 : 400),
     alignSelf: 'center',
     elevation: 4,
     shadowColor: '#000',
@@ -92,22 +93,26 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   title: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: 'bold',
     color: Colors.textcolor,
-    marginTop: fh(12),
-    marginBottom: fh(4),
+    marginTop: fh(getLayoutConfig().isTablet ? 16 : 12),
+    marginBottom: fh(getLayoutConfig().isTablet ? 8 : 4),
+    includeFontPadding: false,
+    lineHeight: ff(getLayoutConfig().isTablet ? 28 : 24),
   },
   subtitle: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     color: Colors.mediumGray,
-    marginBottom: fh(8),
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 8),
+    includeFontPadding: false,
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 20),
   },
   content: {
-    marginTop: fh(8),
+    marginTop: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
   section: {
-    marginBottom: fh(8),
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
 });
 

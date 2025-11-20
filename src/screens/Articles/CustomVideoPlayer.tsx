@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, ViewStyle, Platform } from 'r
 import Video from 'react-native-video';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../../utils/responsive';
 
 interface CustomVideoPlayerProps {
     videoUri: string;
@@ -178,7 +179,7 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({
                     >
                         <Ionicons
                             name={'play-circle'} // Always show play when paused
-                            size={64}
+                            size={getLayoutConfig().isTablet ? fw(80) : fw(64)}
                             color="rgba(255, 255, 255, 0.9)"
                         />
                     </TouchableOpacity>
@@ -213,7 +214,7 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({
                             >
                                 <Ionicons
                                     name={isMuted ? 'volume-mute' : 'volume-high'}
-                                    size={24}
+                                    size={getLayoutConfig().isTablet ? fw(28) : fw(24)}
                                     color="#fff"
                                 />
                             </TouchableOpacity>
@@ -226,7 +227,7 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({
                                 <Ionicons
                                     // ⭐ Dynamically change icon based on state
                                     name={isFullScreen ? 'contract-sharp' : 'expand-sharp'} 
-                                    size={24}
+                                    size={getLayoutConfig().isTablet ? fw(28) : fw(24)}
                                     color="#fff"
                                 />
                             </TouchableOpacity>
@@ -246,7 +247,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({
 };
 
 const styles = StyleSheet.create({
-// ... (Styles remain the same)
     container: {
         position: 'relative',
         width: '100%',
@@ -273,8 +273,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+        paddingHorizontal: fw(getLayoutConfig().isTablet ? 20 : 16),
+        paddingVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
         // The container itself is transparent
         backgroundColor: 'transparent',
         zIndex: 5,
@@ -287,24 +287,24 @@ const styles = StyleSheet.create({
     progressContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
+        gap: fw(getLayoutConfig().isTablet ? 12 : 8),
         // Adding a subtle background for visibility on video
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        borderRadius: 4,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        marginBottom: 4,
+        borderRadius: fr(getLayoutConfig().isTablet ? 6 : 4),
+        paddingHorizontal: fw(getLayoutConfig().isTablet ? 12 : 8),
+        paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
+        marginBottom: fh(getLayoutConfig().isTablet ? 6 : 4),
     },
     slider: {
         flex: 1,
-        height: 30,
-        marginHorizontal: -8,
+        height: fh(getLayoutConfig().isTablet ? 36 : 30),
+        marginHorizontal: fw(getLayoutConfig().isTablet ? -10 : -8),
     },
     timeText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
         fontWeight: '500',
-        width: 35,
+        width: fw(getLayoutConfig().isTablet ? 40 : 35),
         textAlign: 'center',
         // Adding shadow for better contrast against video
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
@@ -314,24 +314,24 @@ const styles = StyleSheet.create({
     actionRow: {
         flexDirection: 'row',
         justifyContent: 'flex-start', // Allows space for all buttons
-        gap: 20, // Add space between icons
+        gap: fw(getLayoutConfig().isTablet ? 24 : 20), // Add space between icons
         alignItems: 'center',
-        marginTop: 4,
-        paddingHorizontal: 8, // Pad this row too
+        marginTop: fh(getLayoutConfig().isTablet ? 6 : 4),
+        paddingHorizontal: fw(getLayoutConfig().isTablet ? 10 : 8), // Pad this row too
     },
     // Styled button for tap targets
     muteButton: {
-        padding: 8,
-        width: 40, 
-        height: 40,
+        padding: fw(getLayoutConfig().isTablet ? 10 : 8),
+        width: fw(getLayoutConfig().isTablet ? 48 : 40), 
+        height: fw(getLayoutConfig().isTablet ? 48 : 40),
         justifyContent: 'center',
         alignItems: 'center',
     },
     fullscreenButton: {
-        padding: 8,
+        padding: fw(getLayoutConfig().isTablet ? 10 : 8),
         marginLeft: 'auto', // Push to the right edge
-        width: 40,
-        height: 40,
+        width: fw(getLayoutConfig().isTablet ? 48 : 40),
+        height: fw(getLayoutConfig().isTablet ? 48 : 40),
         justifyContent: 'center',
         alignItems: 'center',
     },

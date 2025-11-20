@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import Colors from '../constants/colors';
-import { fw, fh, ff } from '../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../utils/responsive';
 
 interface ButtonProps {
   title: string;
@@ -83,15 +83,18 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: fh(12),
-    paddingHorizontal: fw(24),
-    marginVertical: fh(8),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 16 : 12),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 32 : 24),
+    marginVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
+    minHeight: fh(getLayoutConfig().isTablet ? 52 : 44),
+    borderRadius: fr(8),
   },
   text: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: '500',
     fontFamily: 'AnekTelegu-Medium',
-
+    includeFontPadding: false,
+    textAlign: 'center',
   },
 });
 

@@ -29,7 +29,7 @@ import FastImage from "react-native-fast-image";
 import { useOnboarding } from "../../context/OnboardingContext";
 import { useContentTabs } from "../../hooks/useContentTabs";
 import Colors from "../../constants/colors";
-import { fw, fh } from "../../../utils/responsive";
+import { fw, fh, ff } from "../../../utils/responsive";
 import { useIsFocused } from "@react-navigation/native";
 // ✅ import TopBar + Button
 import TopBar from "../../components/TopBar";
@@ -348,20 +348,20 @@ const BuzzScreen = () => {
     const wrapsNormalized = (dailyWraps || [])
       .filter((w) => w?.published_at?.startsWith?.(today))
       .map((w) => {
-      const title = langCode === "te" ? w.title_te || w.title_en : w.title_en || w.title_te;
-      const media = langCode === "te" ? w.media_te : w.media_en;
-      return {
-        id: `wrap-${w.wrap_id}`,
-        type: "wrap" as const,
-        title,
-        media,
-        thumbnail: langCode === "te" ? w.media_te?.thumbnail : w.media_en?.thumbnail,
-        createdAt: w.published_at || w.created_at,
-        stats: w.stats || {},
-        wrap_id: w.wrap_id,
-        category: w.Category || null,
-      };
-    });
+        const title = langCode === "te" ? w.title_te || w.title_en : w.title_en || w.title_te;
+        const media = langCode === "te" ? w.media_te : w.media_en;
+        return {
+          id: `wrap-${w.wrap_id}`,
+          type: "wrap" as const,
+          title,
+          media,
+          thumbnail: langCode === "te" ? w.media_te?.thumbnail : w.media_en?.thumbnail,
+          createdAt: w.published_at || w.created_at,
+          stats: w.stats || {},
+          wrap_id: w.wrap_id,
+          category: w.Category || null,
+        };
+      });
 
     return [...buzzNormalized, ...magsNormalized, ...wrapsNormalized].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -511,7 +511,7 @@ const BuzzScreen = () => {
       );
     }
     return (
-      <View style={[styles.imageWrapper, { height: imageHeight }]}>        
+      <View style={[styles.imageWrapper, { height: imageHeight }]}>
         <Video
           source={{ uri }}
           style={styles.fullscreenImage}
@@ -540,7 +540,7 @@ const BuzzScreen = () => {
           pointerEvents="none"
         />
         <View style={{ position: "absolute", left: fw(16), right: fw(16), bottom: fh(24) }} pointerEvents="none">
-          {!!item.title && <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>{item.title}</Text>}
+          {!!item.title && <Text style={{ color: "#fff", fontSize: ff(16), fontWeight: "700" }}>{item.title}</Text>}
         </View>
         {isBuffering && (
           <View style={styles.placeholder} pointerEvents="none">
@@ -863,8 +863,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#000",
   },
-  loadingText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 16 },
-  noContentText: { color: "#FFFFFF", fontSize: 16 },
+  loadingText: { color: "#FFFFFF", marginTop: fh(10), fontSize: ff(16) },
+  noContentText: { color: "#FFFFFF", fontSize: ff(16) },
   errorBox: {
     flex: 1,
     width: "100%",
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: ff(16),
     textAlign: "center",
     includeFontPadding: false, // ✅ ensures full vertical visibility
     textAlignVertical: "center", // ✅ Android fix
@@ -891,7 +891,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#111",
   },
-  placeholderText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 14 },
+  placeholderText: { color: "#FFFFFF", marginTop: fh(10), fontSize: ff(14) },
   placeholderContainer: {
     flex: 1,
     justifyContent: "center",

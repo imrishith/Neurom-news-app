@@ -28,7 +28,7 @@ import FastImage from "react-native-fast-image";
 import { useOnboarding } from "../../context/OnboardingContext";
 import { useContentTabs } from "../../hooks/useContentTabs";
 import Colors from "../../constants/colors";
-import { fw, fh } from "../../../utils/responsive";
+import { fw, fh, ff, getLayoutConfig, getSafeAreaDimensions } from "../../../utils/responsive";
 import { useIsFocused } from "@react-navigation/native";
 // ✅ import TopBar + Button
 import TopBar from "../../components/TopBar";
@@ -1006,124 +1006,180 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#000" },
   pager: { flex: 1 },
   slide: { width: SCREEN_W, flex: 1, position: "relative" },
-  // These styles are for the new image wrapping logic
+  
+  // Enhanced responsive image wrapper
   imageWrapper: {
-    width: SCREEN_W,
+    width: "100%",
     position: "absolute",
     top: 0,
     left: 0,
-    backgroundColor: "#000", // fallback
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   fullscreenImage: {
-    width: SCREEN_W,
-    resizeMode: "contain", // stretches to fill full height & width
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 
   contentImage: {
     width: "100%",
-    aspectRatio: 920 / 1700, // 👈 keep correct proportion (or use media.width/media.height dynamically)
+    aspectRatio: 920 / 1700,
     resizeMode: "cover",
     borderRadius: 0,
   },
 
+  // Responsive gradient with better height calculation
   fullScreenGradient: {
     ...StyleSheet.absoluteFillObject,
     top: 0,
-    height: fh(220),
+    height: getLayoutConfig().isTablet ? fh(180) : fh(220),
     zIndex: 1,
   },
+  
   loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
+    paddingHorizontal: fw(20),
   },
-  loadingText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 16 },
-  noContentText: { color: "#FFFFFF", fontSize: 16 },
+  
+  loadingText: { 
+    color: "#FFFFFF", 
+    marginTop: fh(12), 
+    fontSize: ff(16),
+    textAlign: "center",
+    includeFontPadding: false,
+  },
+  
+  noContentText: { 
+    color: "#FFFFFF", 
+    fontSize: ff(16), 
+    textAlign: "center",
+    includeFontPadding: false,
+    paddingHorizontal: fw(20),
+  },
+  
   errorBox: {
     flex: 1,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
-    paddingHorizontal: fw(20),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 60 : 20),
   },
 
   errorText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: ff(16),
     textAlign: "center",
-    includeFontPadding: false, // ✅ ensures full vertical visibility
-    textAlignVertical: "center", // ✅ Android fix
-    flexWrap: "wrap", // ✅ prevents truncation
-    width: "90%", // ✅ ensures wrapping within safe area
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    flexWrap: "wrap",
+    width: "90%",
+    lineHeight: ff(24),
   },
-
 
   placeholder: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#111",
+    paddingHorizontal: fw(20),
   },
-  placeholderText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 14 },
+  
+  placeholderText: { 
+    color: "#FFFFFF", 
+    marginTop: fh(12), 
+    fontSize: ff(14),
+    textAlign: "center",
+    includeFontPadding: false,
+  },
+  
   placeholderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
+    paddingHorizontal: fw(20),
   },
+  
   topBarWrap: {
-    // FIX: Must be positioned for zIndex to apply on Android. This lifts the TopBar
-    // above the gradient while keeping it visually pinned at the top.
     position: "absolute",
-    top: fh(20),
+    top: fh(16),
     left: 0,
     right: 0,
-    zIndex: 100, // keep well above overlays to ensure touchability
-    // Hide the in-SafeArea TopBar instance; we render one at the root level instead.
+    zIndex: 100,
     display: "none",
   },
+  
   chipWrapper: {
     position: "absolute",
-    top: fh(100),
+    top: fh(80),
     left: fw(16),
     zIndex: 15,
   },
+  
   chipButton: {
     paddingHorizontal: fw(8),
-    paddingVertical: fh(4),
+    paddingVertical: fh(6),
     borderRadius: fw(20),
     top: fh(20),
   },
 
+  // Responsive interactions container
   interactionsViewContainer: {
     position: "absolute",
     left: 0,
     right: 0,
-    alignItems: "center",      // centers children horizontally
+    alignItems: "center",
     justifyContent: "center",
-    zIndex: 20,                // ensures it's above the image
+    zIndex: 20,
+    bottom: fh(getLayoutConfig().isTablet ? 100 : 80),
+    paddingHorizontal: fw(16),
   },
 
   interactionsContainer: {
     alignSelf: "center",
-    width: fw(277),
+    width: getLayoutConfig().isTablet ? fw(320) : fw(277),
+    maxWidth: getLayoutConfig().isTablet ? "90%" : "85%",
   },
 
-
-
+  // Responsive shadow overlay
   shadowOverlay: {
-    // Gradient sits visually below the TopBar but above content.
-    // It's non-interactive via pointerEvents="none" in JSX.
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: fh(250), // adjust intensity range
+    height: getLayoutConfig().isTablet ? fh(150) : fh(180),
     zIndex: 1,
-    opacity: 0.9, // optional global fade (can tweak)
+    opacity: 0.8,
+  },
+
+  // Responsive touch areas for better usability
+  progressBarContainer: {
+    position: "absolute",
+    left: fw(8),
+    right: fw(8),
+    bottom: fh(20),
+    zIndex: 100,
+    height: fh(32),
+    justifyContent: "center",
+  },
+
+  progressBar: {
+    height: 4,
+    backgroundColor: "#FFFFFF40",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+
+  progressFill: {
+    height: 4,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 2,
   },
 
 });

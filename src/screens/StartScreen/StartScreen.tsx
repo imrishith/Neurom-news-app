@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import GradientScreen from "../../components/GradientScreen";
 import Colors from "../../constants/colors";
-import { fw, fh, ff } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 
 const StartScreen = () => {
   const navigation = useNavigation<any>();
@@ -84,24 +84,26 @@ const StartScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: fh(844),
-    width: fw(390),
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: fw(20),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingVertical: fh(40),
   },
   logo: {
-    width: fw(237.6),
-    height: fh(66),
-    marginBottom: fh(20),
+    width: fw(getLayoutConfig().isTablet ? 280 : 237.6),
+    height: fh(getLayoutConfig().isTablet ? 80 : 66),
+    marginBottom: fh(getLayoutConfig().isTablet ? 32 : 20),
   },
   subtitle: {
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     fontWeight: "600",
     fontFamily: "AnekTelugu-SemiBold",
     color: Colors.textcolor,
     textAlign: "center",
-    marginHorizontal: fw(5)
+    marginHorizontal: fw(8),
+    lineHeight: ff(getLayoutConfig().isTablet ? 26 : 24),
+    includeFontPadding: false,
   },
 });
 

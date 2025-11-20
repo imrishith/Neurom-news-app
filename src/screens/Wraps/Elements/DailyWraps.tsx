@@ -14,6 +14,7 @@ import { useOnboarding } from "../../../context/OnboardingContext";
 import ReelShareModal from "../../../components/share/reel/ReelShareModal";
 import useVideoCacheManager from "../../../hooks/useVideoCacheManager";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { fw, fh, ff, getLayoutConfig } from "../../../../utils/responsive";
 
 const { height: SCREEN_H, width: SCREEN_W } = Dimensions.get("window");
 

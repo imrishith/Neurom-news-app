@@ -33,7 +33,7 @@ import ArticleAudioMode from "./ArticleAudioMode";
 import PagerView from "react-native-pager-view";
 import TrackPlayer from "react-native-track-player";
 import { transliterateText } from "../../../utils/transliteration";
-import { fw, fh, ff, getTopInset } from "../../../utils/responsive";
+import { fw, fh, ff, getTopInset, fr, getLayoutConfig } from "../../../utils/responsive";
 import { MMKV } from "react-native-mmkv";
 import ArticleShareModal from "../../components/share/article/ArticleShareModal";
 import { prefetchImages } from "../../../utils/prefetchImages";
@@ -707,13 +707,14 @@ const styles = StyleSheet.create({
     zIndex: 10
   },
   topbarInner: {
-    marginTop: fh(10),
-    marginBottom: fh(-20),
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 10),
+    marginBottom: fh(getLayoutConfig().isTablet ? -16 : -20),
   },
   loader: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: fw(20),
   },
   deckContainer: {
     flex: 1,

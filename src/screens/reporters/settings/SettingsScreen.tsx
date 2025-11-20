@@ -12,7 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import GradientScreen from "../../../components/GradientScreen";
 import AppHeader from "../../../components/AppHeader";
-import { fw, fh, ff } from "../../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../../utils/responsive";
 import { useTheme } from "../../../context/ThemeContext";
 import { useOnboarding } from "../../../context/OnboardingContext";
 import Ionicons from "react-native-vector-icons/Ionicons"; // ⭐ for stars
@@ -240,40 +240,53 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  headerIcon: { width: fw(22), height: fw(22) },
+  headerIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 26 : 22), 
+    height: fw(getLayoutConfig().isTablet ? 26 : 22) 
+  },
   content: {
-    paddingHorizontal: fw(16),
-    paddingTop: fh(20),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingTop: fh(getLayoutConfig().isTablet ? 24 : 20),
     paddingBottom: fh(24),
   },
   sectionTitle: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     opacity: 0.9,
-    marginBottom: fh(10),
+    marginBottom: fh(getLayoutConfig().isTablet ? 14 : 10),
     fontWeight: "600",
+    includeFontPadding: false,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: fw(12),
-    height: fh(48),
-    borderRadius: fw(10),
-    marginBottom: fh(10),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
+    height: fh(getLayoutConfig().isTablet ? 56 : 48),
+    borderRadius: fr(10),
+    marginBottom: fh(getLayoutConfig().isTablet ? 14 : 10),
   },
   rowIcon: {
-    width: fw(24),
-    height: fw(24),
+    width: fw(getLayoutConfig().isTablet ? 28 : 24),
+    height: fw(getLayoutConfig().isTablet ? 28 : 24),
     opacity: 0.9,
-    marginRight: fw(10),
+    marginRight: fw(getLayoutConfig().isTablet ? 14 : 10),
   },
-  rowText: { flex: 1, fontSize: ff(14), fontWeight: "400" },
-  rowRightText: { fontSize: ff(12), opacity: 0.85 },
+  rowText: { 
+    flex: 1, 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
+    fontWeight: "400",
+    includeFontPadding: false,
+  },
+  rowRightText: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    opacity: 0.85,
+    includeFontPadding: false,
+  },
 
   // ⭐ Rate Section
   rateContainer: {
-    borderRadius: fw(10),
-    paddingVertical: fh(16),
-    paddingHorizontal: fw(16),
+    borderRadius: fr(10),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 20 : 16),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 20 : 16),
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -281,16 +294,17 @@ const styles = StyleSheet.create({
   starsRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginVertical: fh(8),
+    marginVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
   submitButton: {
-    marginTop: fh(10),
-    paddingVertical: fh(10),
-    paddingHorizontal: fw(20),
-    borderRadius: fw(8),
+    marginTop: fh(getLayoutConfig().isTablet ? 14 : 10),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 14 : 10),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 24 : 20),
+    borderRadius: fr(8),
   },
   submitText: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     textAlign: "center",
+    includeFontPadding: false,
   },
 });

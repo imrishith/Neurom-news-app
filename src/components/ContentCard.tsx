@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Image, StyleSheet, Text } from "react-native";
 import PdfPagerViewer from "../screens/DailyWraps/PdfPageViewer";
+import { fw, ff, fh, getLayoutConfig } from "../../utils/responsive";
 
 interface FeedItem {
   id: string;
@@ -27,15 +28,15 @@ const ContentCard: React.FC<Props> = ({ item, verticalPagerRef }) => {
     );
   }
 
- if (item.type === "pdf") {
-  return (
-    <PdfPagerViewer
-      url={item.url}
-      onSwipeStart={() => verticalPagerRef.current?.setScrollEnabled(false)}
-      onSwipeEnd={() => verticalPagerRef.current?.setScrollEnabled(true)}
-    />
-  );
-}
+  if (item.type === "pdf") {
+    return (
+      <PdfPagerViewer
+        url={item.url}
+        onSwipeStart={() => verticalPagerRef.current?.setScrollEnabled(false)}
+        onSwipeEnd={() => verticalPagerRef.current?.setScrollEnabled(true)}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -48,10 +49,11 @@ const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", alignItems: "center" },
   image: { ...StyleSheet.absoluteFillObject },
   typeText: {
-    fontSize: 24,
+    fontSize: ff(getLayoutConfig().isTablet ? 28 : 24),
     color: "white",
     backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 8,
+    padding: fw(getLayoutConfig().isTablet ? 12 : 8),
+    includeFontPadding: false,
   },
 });
 

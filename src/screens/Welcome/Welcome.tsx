@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, Image, Animated } from "react-native";
 import GradientScreen from "../../components/GradientScreen";
-import { fw, fh } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 import Colors from "../../constants/colors";
 import { useNavigation } from "@react-navigation/native";
 
@@ -55,14 +55,15 @@ const SplashScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: fh(844),
-    width: fw(390),
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingVertical: fh(40),
   },
   logo: {
-    width: fw(237.6),
-    height: fh(66),
+    width: fw(getLayoutConfig().isTablet ? 280 : 237.6),
+    height: fh(getLayoutConfig().isTablet ? 80 : 66),
   },
 });
 

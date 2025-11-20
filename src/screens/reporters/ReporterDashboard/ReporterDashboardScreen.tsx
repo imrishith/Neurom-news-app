@@ -18,7 +18,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import GradientScreen from "../../../components/BackgoundGradient";
 import AppHeader from "../../../components/AppHeader";
 import SidebarPanel from "../SidebarPanel/SidebarPanel";
-import { fw, fh, ff } from "../../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../../utils/responsive";
 import Colors from "../../../constants/colors";
 import { useOnboarding } from "../../../context/OnboardingContext";
 import { reporterProfile, reporterEarnings } from "../../../api/reporter/reporterApi";
@@ -383,7 +383,13 @@ const ReporterDashboardScreen = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
-  profileWrap: { flexDirection: "row", alignItems: "center", marginHorizontal: fw(16), marginTop: fh(15), marginBottom: fh(8) },
+  profileWrap: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    marginHorizontal: getLayoutConfig().contentPadding, 
+    marginTop: fh(getLayoutConfig().isTablet ? 20 : 15), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 8) 
+  },
   avatarOuter: {
     width: AVATAR_SIZE + AVATAR_BORDER * 2,
     height: AVATAR_SIZE + AVATAR_BORDER * 2,
@@ -391,27 +397,114 @@ const styles = StyleSheet.create({
     borderWidth: AVATAR_BORDER,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: fw(12),
+    marginRight: fw(getLayoutConfig().isTablet ? 16 : 12),
   },
-  avatarInner: { width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2, overflow: "hidden", backgroundColor: "#4B3A69" },
-  hiText: { fontSize: ff(16), marginBottom: fh(4) },
-  subline: { fontSize: ff(12), color: Colors.textcolor, marginTop: fh(2) },
+  avatarInner: { 
+    width: AVATAR_SIZE, 
+    height: AVATAR_SIZE, 
+    borderRadius: AVATAR_SIZE / 2, 
+    overflow: "hidden", 
+    backgroundColor: "#4B3A69" 
+  },
+  hiText: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 6 : 4),
+    includeFontPadding: false,
+  },
+  subline: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    color: Colors.textcolor, 
+    marginTop: fh(getLayoutConfig().isTablet ? 4 : 2),
+    includeFontPadding: false,
+  },
   sublineStrong: { color: Colors.textcolor },
-  link: { marginTop: fh(6), fontSize: ff(12), textDecorationLine: "underline", color: Colors.textcolor },
-  cardsColumn: { paddingHorizontal: fw(16), gap: fh(30), marginTop: fh(20) },
-  card: { minHeight: fh(125), borderRadius: fw(12), paddingHorizontal: fw(14), paddingVertical: fh(16), flexDirection: "row", alignItems: "center" },
-  cardTextCol: { flex: 1, paddingRight: fw(8) },
-  cardArt: { width: fw(90), height: fh(90) },
-  cardTitle: { fontSize: ff(14), marginBottom: fh(6), color: Colors.textcolor },
-  cardSubtitle: { fontSize: ff(12), marginBottom: fh(10), color: Colors.textcolor },
-  cardLink: { fontSize: ff(12), textDecorationLine: "underline", color: Colors.textcolor },
-  badgeLine: { fontSize: ff(12), marginBottom: fh(8), color: Colors.textcolor },
-  badgeStrong: { textDecorationLine: "underline", color: Colors.textcolor },
-  kvRowBox: { width: "48%", marginBottom: fh(12), backgroundColor: Colors.deepPurple, borderRadius: fw(8), paddingVertical: fh(12), paddingHorizontal: fw(10) },
-  kvLabel: { fontSize: ff(12), color: Colors.textcolor },
-  kvValue: { fontSize: ff(12), marginTop: fh(4), color: Colors.textcolor },
-  withdrawBtn: { alignSelf: "flex-start", height: fh(36), paddingHorizontal: fw(16), borderRadius: fw(8), justifyContent: "center", alignItems: "center", marginTop: fh(18) },
-  withdrawText: { color: Colors.textcolor, fontSize: ff(12) },
+  link: { 
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 6), 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    textDecorationLine: "underline", 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  cardsColumn: { 
+    paddingHorizontal: getLayoutConfig().contentPadding, 
+    gap: fh(getLayoutConfig().isTablet ? 36 : 30), 
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20) 
+  },
+  card: { 
+    minHeight: fh(getLayoutConfig().isTablet ? 140 : 125), 
+    borderRadius: fr(12), 
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 18 : 14), 
+    paddingVertical: fh(getLayoutConfig().isTablet ? 20 : 16), 
+    flexDirection: "row", 
+    alignItems: "center" 
+  },
+  cardTextCol: { flex: 1, paddingRight: fw(getLayoutConfig().isTablet ? 12 : 8) },
+  cardArt: { 
+    width: fw(getLayoutConfig().isTablet ? 100 : 90), 
+    height: fh(getLayoutConfig().isTablet ? 100 : 90) 
+  },
+  cardTitle: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 8 : 6), 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  cardSubtitle: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 10), 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  cardLink: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    textDecorationLine: "underline", 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  badgeLine: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 10 : 8), 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  badgeStrong: { 
+    textDecorationLine: "underline", 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  kvRowBox: { 
+    width: "48%", 
+    marginBottom: fh(getLayoutConfig().isTablet ? 16 : 12), 
+    backgroundColor: Colors.deepPurple, 
+    borderRadius: fr(8), 
+    paddingVertical: fh(getLayoutConfig().isTablet ? 16 : 12), 
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 14 : 10) 
+  },
+  kvLabel: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  kvValue: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    marginTop: fh(getLayoutConfig().isTablet ? 6 : 4), 
+    color: Colors.textcolor,
+    includeFontPadding: false,
+  },
+  withdrawBtn: { 
+    alignSelf: "flex-start", 
+    height: fh(getLayoutConfig().isTablet ? 44 : 36), 
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 20 : 16), 
+    borderRadius: fr(8), 
+    justifyContent: "center", 
+    alignItems: "center", 
+    marginTop: fh(getLayoutConfig().isTablet ? 22 : 18) 
+  },
+  withdrawText: { 
+    color: Colors.textcolor, 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
+    includeFontPadding: false,
+  },
 });
 
 export default ReporterDashboardScreen;

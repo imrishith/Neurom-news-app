@@ -16,7 +16,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import GradientScreen from "../../../components/GradientScreen";
-import { fw, fh, ff } from "../../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../../utils/responsive";
 import { useTheme } from "../../../context/ThemeContext";
 import { useOnboarding } from "../../../context/OnboardingContext"; // ✅ translations + fonts
 import { reporterArticles} from "../../../api/reporter/reporterApi";
@@ -213,69 +213,80 @@ export default function TotalPostsScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, paddingHorizontal: fw(16) },
+  screen: { 
+    flex: 1, 
+    paddingHorizontal: getLayoutConfig().contentPadding 
+  },
 
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: fh(4),
-    paddingBottom: fh(8),
+    paddingTop: fh(getLayoutConfig().isTablet ? 8 : 4),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
-  backIcon: { width: fw(20), height: fh(20) },
+  backIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 24 : 20), 
+    height: fh(getLayoutConfig().isTablet ? 24 : 20) 
+  },
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     fontWeight: "600",
+    includeFontPadding: false,
   },
 
   statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: fh(30),
-    marginBottom: fh(14),
+    marginTop: fh(getLayoutConfig().isTablet ? 34 : 30),
+    marginBottom: fh(getLayoutConfig().isTablet ? 18 : 14),
   },
   statCard: {
     flex: 1,
-    borderRadius: fw(12),
-    paddingVertical: fh(20),
-    paddingHorizontal: fw(20),
-    marginRight: fw(10),
-    height: fh(87),
-    width: fw(110),
+    borderRadius: fr(getLayoutConfig().isTablet ? 16 : 12),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 24 : 20),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 24 : 20),
+    marginRight: fw(getLayoutConfig().isTablet ? 14 : 10),
+    height: fh(getLayoutConfig().isTablet ? 96 : 87),
+    width: fw(getLayoutConfig().isTablet ? 120 : 110),
   },
   statTitle: {
-    fontSize: ff(13),
-    marginBottom: fh(8),
+    fontSize: ff(getLayoutConfig().isTablet ? 15 : 13),
+    marginBottom: fh(getLayoutConfig().isTablet ? 10 : 8),
     textAlign: "center",
+    includeFontPadding: false,
   },
   statValue: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "400",
     textAlign: "center",
+    includeFontPadding: false,
   },
 
   sectionTitle: {
-    fontSize: ff(14),
-    marginBottom: fh(8),
-    marginTop: fh(20),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 8),
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20),
+    includeFontPadding: false,
   },
 
   postRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    marginBottom: fh(14),
-    marginTop: fh(20),
+    marginBottom: fh(getLayoutConfig().isTablet ? 18 : 14),
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20),
   },
   postThumb: {
-    width: fw(161),
-    height: fh(129),
-    borderRadius: fw(10),
-    marginRight: fw(12),
+    width: fw(getLayoutConfig().isTablet ? 180 : 161),
+    height: fh(getLayoutConfig().isTablet ? 144 : 129),
+    borderRadius: fr(getLayoutConfig().isTablet ? 14 : 10),
+    marginRight: fw(getLayoutConfig().isTablet ? 16 : 12),
   },
   postText: {
     flex: 1,
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     fontWeight: "600",
+    includeFontPadding: false,
   },
 });

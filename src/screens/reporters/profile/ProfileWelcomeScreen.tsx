@@ -22,7 +22,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import GradientScreen from '../../../components/GradientScreen';
 import AppHeader from '../../../components/AppHeader';
 import Colors from '../../../constants/colors';
-import { fw, fh, ff } from '../../../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../../../utils/responsive';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '../../../context/ThemeContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -1061,14 +1061,22 @@ const mapLanguageTextToId = (text: string) => {
 };
 
 const styles = StyleSheet.create({
-  // ... (All other styles remain the same)
-  centerTitle: { width: fw(72), height: fh(20), marginRight: fw(10), tintColor: Colors.lavenderPurple },
-  icon24: { width: fw(24), height: fw(24), marginLeft: fw(8) },
+  centerTitle: { 
+    width: fw(getLayoutConfig().isTablet ? 84 : 72), 
+    height: fh(getLayoutConfig().isTablet ? 24 : 20), 
+    marginRight: fw(getLayoutConfig().isTablet ? 14 : 10), 
+    tintColor: Colors.lavenderPurple 
+  },
+  icon24: { 
+    width: fw(getLayoutConfig().isTablet ? 28 : 24), 
+    height: fw(getLayoutConfig().isTablet ? 28 : 24), 
+    marginLeft: fw(getLayoutConfig().isTablet ? 12 : 8) 
+  },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: fw(16),
-    marginTop: fh(10),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    marginTop: fh(getLayoutConfig().isTablet ? 16 : 10),
   },
   avatarOuter: {
     width: AVATAR_SIZE,
@@ -1088,115 +1096,138 @@ const styles = StyleSheet.create({
     backgroundColor: '#4B3A69',
   },
   avatarImage: { width: '100%', height: '100%' },
-  welcomeWrap: { flex: 1, marginLeft: fw(12) },
+  welcomeWrap: { flex: 1, marginLeft: fw(getLayoutConfig().isTablet ? 16 : 12) },
   welcomeText: {
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     fontWeight: '400',
-    marginBottom: 0
+    marginBottom: 0,
+    includeFontPadding: false,
   },
   loginLink: {
-    marginTop: fh(4),
-    fontSize: ff(12),
+    marginTop: fh(getLayoutConfig().isTablet ? 6 : 4),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     textDecorationLine: 'underline',
     fontWeight: '800',
+    includeFontPadding: false,
   },
-  toggleRow: { flexDirection: 'row', alignItems: 'center', gap: fw(8), marginTop: fh(5), bottom: fh(14) },
+  toggleRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: fw(getLayoutConfig().isTablet ? 12 : 8), 
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 5), 
+    bottom: fh(getLayoutConfig().isTablet ? 10 : 14) 
+  },
   toggleLabel: {
-    fontSize: ff(14),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
     fontWeight: '400',
+    includeFontPadding: false,
   },
   ctaBtn: {
- marginHorizontal: fw(16),
-    height: fh(48),
-    borderRadius: fw(10),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    height: fh(getLayoutConfig().isTablet ? 56 : 48),
+    borderRadius: fr(10),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: fh(15),
+    marginTop: fh(getLayoutConfig().isTablet ? 20 : 15),
   },
   ctaContent: {
     width: '100%',
-    paddingHorizontal: fw(14),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 18 : 14),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  ctaLeftIcon: { width: fw(50), height: fw(50) },
-  ctaRightIcon: { width: fw(20), height: fw(20), tintColor: 'white', marginRight: fw(8) },
+  ctaLeftIcon: { width: fw(getLayoutConfig().isTablet ? 60 : 50), height: fw(getLayoutConfig().isTablet ? 60 : 50) },
+  ctaRightIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 24 : 20), 
+    height: fw(getLayoutConfig().isTablet ? 24 : 20), 
+    tintColor: 'white', 
+    marginRight: fw(getLayoutConfig().isTablet ? 12 : 8) 
+  },
   ctaText: {
     flex: 1,
     textAlign: 'left',
     color: 'white',
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     fontWeight: '700',
-    marginLeft: fw(8),
+    marginLeft: fw(getLayoutConfig().isTablet ? 12 : 8),
+    includeFontPadding: false,
   },
   sectionHeading: {
-    marginHorizontal: fw(16),
-    marginBottom: fh(24),
-    marginTop: fh(24),
-    fontSize: ff(14),
-    lineHeight: ff(22),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    marginBottom: fh(getLayoutConfig().isTablet ? 30 : 24),
+    marginTop: fh(getLayoutConfig().isTablet ? 30 : 24),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    lineHeight: ff(getLayoutConfig().isTablet ? 24 : 22),
     fontWeight: '600',
+    includeFontPadding: false,
   },
   cardList: {
-    marginHorizontal: fw(16),
-    gap: fh(20),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    gap: fh(getLayoutConfig().isTablet ? 24 : 20),
   },
   contentCard: {
-    height: fh(48),
+    height: fh(getLayoutConfig().isTablet ? 56 : 48),
     width: '100%',
-    borderRadius: fw(10),
-    paddingVertical: fh(14),
-    paddingHorizontal: fw(6),
+    borderRadius: fr(10),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 18 : 14),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 10 : 6),
     flexDirection: 'row',
     alignItems: 'center',
   },
   cardIconWrap: {
-    width: fw(28),
-    height: fw(28),
-    borderRadius: fw(6),
+    width: fw(getLayoutConfig().isTablet ? 32 : 28),
+    height: fw(getLayoutConfig().isTablet ? 32 : 28),
+    borderRadius: fr(6),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: fw(10),
+    marginRight: fw(getLayoutConfig().isTablet ? 14 : 10),
   },
-  cardIcon: { width: fw(18), height: fw(18), },
+  cardIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 22 : 18), 
+    height: fw(getLayoutConfig().isTablet ? 22 : 18), 
+  },
   cardTitle: {
     flex: 1,
-    fontSize: ff(14),
-    
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    includeFontPadding: false,
   },
   prefList: {
-    marginHorizontal: fw(16),
-    marginTop: fh(10),
-    gap: fh(20),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    marginTop: fh(getLayoutConfig().isTablet ? 16 : 10),
+    gap: fh(getLayoutConfig().isTablet ? 24 : 20),
   },
   prefRowBase: {
-    height: fh(49),
+    height: fh(getLayoutConfig().isTablet ? 56 : 49),
     width: '100%',
-    borderRadius: fw(6),
-    paddingVertical: fh(14),
-    paddingHorizontal: fw(12),
+    borderRadius: fr(6),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 18 : 14),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   rowLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  prefIcon: { width: fw(21), height: fw(21), marginRight: fw(10) },
+  prefIcon: { 
+    width: fw(getLayoutConfig().isTablet ? 24 : 21), 
+    height: fw(getLayoutConfig().isTablet ? 24 : 21), 
+    marginRight: fw(getLayoutConfig().isTablet ? 14 : 10) 
+  },
   prefTitle: {
-    fontSize: ff(14),
-   
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    includeFontPadding: false,
   },
   referBtn: {
-    marginHorizontal: fw(16),
-    height: fh(48),
-    borderRadius: fw(10),
+    marginHorizontal: getLayoutConfig().contentPadding,
+    height: fh(getLayoutConfig().isTablet ? 56 : 48),
+    borderRadius: fr(10),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: fh(15),
+    marginTop: fh(getLayoutConfig().isTablet ? 20 : 15),
   },
   referContent: {
     width: '100%',
-    paddingHorizontal: fw(14),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 18 : 14),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -1204,10 +1235,10 @@ const styles = StyleSheet.create({
   referText: {
     flex: 1,
     textAlign: 'left',
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     fontWeight: '700',
-    paddingVertical: fh(10),
-    
+    paddingVertical: fh(getLayoutConfig().isTablet ? 14 : 10),
+    includeFontPadding: false,
   },
   modalOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -1215,19 +1246,42 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  modalBox: { width: fw(300), borderRadius: fw(12), padding: fw(20), height: fh(250), top: fh(300) },
-  modalHeading: { fontSize: ff(14), marginBottom: fh(16), textAlign: 'center' },
+  modalBox: { 
+    width: fw(getLayoutConfig().isTablet ? 360 : 300), 
+    borderRadius: fr(12), 
+    padding: fw(getLayoutConfig().isTablet ? 24 : 20), 
+    height: fh(getLayoutConfig().isTablet ? 280 : 250), 
+    top: fh(getLayoutConfig().isTablet ? 280 : 300) 
+  },
+  modalHeading: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
+    marginBottom: fh(getLayoutConfig().isTablet ? 20 : 16), 
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
   input: {
     borderWidth: 1,
-    borderRadius: fw(8),
-    paddingVertical: fh(2),
-    paddingLeft: fw(15),
-    paddingRight: fw(8),
-    marginBottom: fh(12),
-    fontSize: ff(14),
+    borderRadius: fr(8),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 8 : 2),
+    paddingLeft: fw(getLayoutConfig().isTablet ? 18 : 15),
+    paddingRight: fw(getLayoutConfig().isTablet ? 12 : 8),
+    marginBottom: fh(getLayoutConfig().isTablet ? 16 : 12),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    includeFontPadding: false,
   },
-  submitBtn: { borderRadius: fw(8), paddingVertical: fh(15), alignItems: 'center', marginTop: fh(8) },
-  submitText: { color: '#fff', fontSize: ff(12), bottom: fh(2), right: fw(2), },
+  submitBtn: { 
+    borderRadius: fr(8), 
+    paddingVertical: fh(getLayoutConfig().isTablet ? 18 : 15), 
+    alignItems: 'center', 
+    marginTop: fh(getLayoutConfig().isTablet ? 12 : 8) 
+  },
+  submitText: { 
+    color: '#fff', 
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12), 
+    bottom: fh(getLayoutConfig().isTablet ? 0 : 2), 
+    right: fw(getLayoutConfig().isTablet ? 0 : 2),
+    includeFontPadding: false,
+  },
 
   // Bottom Sheet Styles
   bottomSheetOverlay: {
@@ -1238,28 +1292,28 @@ const styles = StyleSheet.create({
   bottomSheetContainer: {
     width: '100%',
     height: "50%",
-    borderTopLeftRadius: fw(20),
-    borderTopRightRadius: fw(20),
-    paddingHorizontal: fw(16),
-    paddingTop: fh(10),
+    borderTopLeftRadius: fr(20),
+    borderTopRightRadius: fr(20),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingTop: fh(getLayoutConfig().isTablet ? 14 : 10),
     paddingBottom: fh(20),
   },
   bottomSheetTitle: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     textAlign: 'center',
-    paddingVertical: fh(10),
-    marginBottom: fh(10),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 14 : 10),
+    marginBottom: fh(getLayoutConfig().isTablet ? 14 : 10),
     color: '#FFF',
+    includeFontPadding: false,
   },
   bsListContent: {
-    paddingBottom: fh(20),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 24 : 20),
   },
   bsItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: fh(15),
-
-    justifyContent: 'flex-start', // 👈 gives text more space
+    paddingVertical: fh(getLayoutConfig().isTablet ? 18 : 15),
+    justifyContent: 'flex-start',
   },
   bsText: {
     fontSize: ff(16),

@@ -41,6 +41,6 @@ async function setupPlayer() {
 setupPlayer();
 AppRegistry.registerComponent(appName, () => Root);
 
-TrackPlayer.registerPlaybackService(() => 
+TrackPlayer.registerPlaybackService(() =>
   require('./src/utils/audio/service')
 );

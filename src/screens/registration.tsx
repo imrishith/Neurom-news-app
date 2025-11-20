@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientScreen from '../components/GradientScreen';
-import { fw, fh, ff } from '../../utils/responsive';
+import { fw, fh, ff, fr, getLayoutConfig } from '../../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 import LoginModal from '../components/LoginModal';
 import { useOnboarding } from '../context/OnboardingContext';
@@ -251,100 +251,106 @@ const UserRegistrationScreen = () => {
 const styles = StyleSheet.create({
   safeTop: { backgroundColor: 'transparent' },
   headerContent: {
-    height: fh(56),
+    height: getLayoutConfig().headerHeight,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: fw(12),
-    marginTop: fh(10), // ✅ Add consistent top margin
+    marginTop: fh(10),
   },
   leftIconHitSlop: {
-    width: fw(32),
-    height: fh(32),
+    width: fw(getLayoutConfig().isTablet ? 40 : 32),
+    height: fh(getLayoutConfig().isTablet ? 40 : 32),
     justifyContent: 'center',
     alignItems: 'center',
   },
   leftIcon: { 
-    width: fw(24), 
-    height: fh(24),
-    marginLeft: fw(4), // ✅ Small left margin
+    width: fw(getLayoutConfig().isTablet ? 28 : 24), 
+    height: fh(getLayoutConfig().isTablet ? 28 : 24),
+    marginLeft: fw(4),
   },
   headerTitle: {
     flex: 1,
     textAlign: 'center',
     fontFamily: 'AnekTelugu-SemiBold',
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: '600',
-    paddingHorizontal: fw(8), // ✅ Add padding to prevent truncation
-    includeFontPadding: false, // ✅ Android-specific
+    paddingHorizontal: fw(8),
+    includeFontPadding: false,
   },
   container: { 
     flex: 1, 
-    paddingHorizontal: fw(24), // ✅ Increased from 20
+    paddingHorizontal: getLayoutConfig().contentPadding,
     marginTop: fh(10),
+    justifyContent: 'center',
   },
   label: { 
-    fontSize: ff(14), 
-    marginTop: fh(20), 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14), 
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20), 
     marginBottom: fh(8),
-    lineHeight: ff(20), // ✅ Use ff() for consistency
-    includeFontPadding: false, // ✅ Android-specific
+    lineHeight: ff(getLayoutConfig().isTablet ? 24 : 20),
+    includeFontPadding: false,
+    fontWeight: '500',
   },
   input: {
-    height: fh(50),
-    borderRadius: fw(6),
-    paddingHorizontal: fw(16), // ✅ Increased from 15
-    fontSize: ff(14),
-    marginBottom: fh(10),
-    includeFontPadding: false, // ✅ Android-specific
+    height: fh(getLayoutConfig().isTablet ? 56 : 50),
+    borderRadius: fr(6),
+    paddingHorizontal: fw(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    marginBottom: fh(getLayoutConfig().isTablet ? 16 : 10),
+    includeFontPadding: false,
   },
   genderOption: {
-    height: fh(50),
-    borderRadius: fw(6),
+    height: fh(getLayoutConfig().isTablet ? 56 : 50),
+    borderRadius: fr(6),
     justifyContent: 'center',
-    paddingHorizontal: fw(16), // ✅ Increased from 15
+    paddingHorizontal: fw(16),
     marginTop: fh(20),
   },
   genderText: { 
-    fontSize: ff(14),
-    includeFontPadding: false, // ✅ Android-specific
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    includeFontPadding: false,
+    fontWeight: '500',
   },
   hintText: { 
     marginTop: fh(8), 
-    fontSize: ff(12),
-    lineHeight: ff(18), // ✅ Use ff() for consistency
-    includeFontPadding: false, // ✅ Android-specific
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
+    lineHeight: ff(getLayoutConfig().isTablet ? 20 : 18),
+    includeFontPadding: false,
   },
   submitButton: {
-    height: fh(50),
+    height: fh(getLayoutConfig().isTablet ? 56 : 50),
     width: '100%',
-    borderRadius: fw(6),
+    borderRadius: fr(6),
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: fw(16), // ✅ Add padding
+    paddingHorizontal: fw(16),
+    marginTop: fh(getLayoutConfig().isTablet ? 40 : 80),
   },
   submitText: { 
-    fontSize: ff(16), 
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16), 
     fontFamily: 'AnekTelugu-SemiBold',
-    includeFontPadding: false, // ✅ Android-specific
-    lineHeight: ff(22), // ✅ Use ff() for consistency
+    includeFontPadding: false,
+    lineHeight: ff(getLayoutConfig().isTablet ? 24 : 22),
   },
   loginRow: { 
-  // flexDirection: 'row', 
-  marginTop: fh(20), 
-  justifyContent: 'center',
-  paddingHorizontal: fw(20),
-},
-loginText: { 
-  fontSize: ff(14),
-  lineHeight: ff(20),
-  includeFontPadding: false,
-},
-loginLink: { 
-  textDecorationLine: 'underline', 
-  fontSize: ff(14),
-  includeFontPadding: false,
-  lineHeight: ff(20), // ✅ Match parent lineHeight
-},
+    marginTop: fh(getLayoutConfig().isTablet ? 24 : 20), 
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: fw(20),
+  },
+  loginText: { 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 20),
+    includeFontPadding: false,
+    textAlign: 'center',
+  },
+  loginLink: { 
+    textDecorationLine: 'underline', 
+    fontSize: ff(getLayoutConfig().isTablet ? 16 : 14),
+    includeFontPadding: false,
+    lineHeight: ff(getLayoutConfig().isTablet ? 22 : 20),
+    fontWeight: '600',
+  },
 });
 
 export default UserRegistrationScreen;

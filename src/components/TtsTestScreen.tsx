@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Tts from "react-native-tts";
+import { fw, fh, ff } from "../../utils/responsive";
 
 const TtsTestScreen = () => {
   const [voices, setVoices] = useState<any[]>([]);
@@ -101,30 +102,30 @@ export default TtsTestScreen;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: fw(20),
     backgroundColor: "#000",
     flexGrow: 1,
     alignItems: "center",
   },
   heading: {
     color: "#fff",
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: ff(18),
+    marginBottom: fh(10),
   },
   subheading: {
     color: "#aaa",
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: ff(16),
+    marginBottom: fh(8),
     alignSelf: "flex-start",
   },
-  section: { width: "100%", marginBottom: 16 },
+  section: { width: "100%", marginBottom: fh(16) },
   button: {
     backgroundColor: "#997DDF",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginBottom: 8,
+    paddingHorizontal: fw(16),
+    paddingVertical: fh(10),
+    borderRadius: fw(8),
+    marginBottom: fh(8),
     width: "100%",
   },
-  btnText: { color: "#fff", fontSize: 14 },
+  btnText: { color: "#fff", fontSize: ff(14) },
 });

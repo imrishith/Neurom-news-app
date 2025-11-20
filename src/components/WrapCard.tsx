@@ -15,7 +15,7 @@ import Slider from "@react-native-community/slider";
 import LinearGradient from "react-native-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { fw, fh, ff } from "../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../utils/responsive";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
@@ -191,25 +191,35 @@ const styles = StyleSheet.create({
     height: "35%",
     zIndex: 5,
   },
-  textBox: { position: "absolute", left: fw(16), zIndex: 10 },
+  textBox: { 
+    position: "absolute", 
+    left: getLayoutConfig().contentPadding, 
+    zIndex: 10,
+    maxWidth: "80%",
+  },
   title: {
     color: "#fff",
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: "700",
-    marginBottom: fh(4),
+    marginBottom: fh(getLayoutConfig().isTablet ? 6 : 4),
+    includeFontPadding: false,
   },
-  date: { color: "#ddd", fontSize: ff(13) },
+  date: { 
+    color: "#ddd", 
+    fontSize: ff(getLayoutConfig().isTablet ? 15 : 13),
+    includeFontPadding: false,
+  },
   rightOptions: {
     position: "absolute",
-    right: fw(16),
+    right: getLayoutConfig().contentPadding,
     zIndex: 10,
     alignItems: "center",
-    gap: fh(12),
+    gap: fh(getLayoutConfig().isTablet ? 16 : 12),
   },
   sliderBox: {
     position: "absolute",
     width: "100%",
-    paddingHorizontal: fw(10),
+    paddingHorizontal: getLayoutConfig().contentPadding,
     zIndex: 50,
   },
   centerOverlay: {
@@ -218,9 +228,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   circle: {
-    width: fw(55),
-    height: fw(55),
-    borderRadius: fw(40),
+    width: fw(getLayoutConfig().isTablet ? 65 : 55),
+    height: fw(getLayoutConfig().isTablet ? 65 : 55),
+    borderRadius: fr(getLayoutConfig().isTablet ? 45 : 40),
     backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "center",
     alignItems: "center",

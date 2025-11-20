@@ -17,7 +17,7 @@ import SidebarPanel from "../Sidebar/SidebarPanel";
 import { useContentTabs } from "../../hooks/useContentTabs";
 import { useOnboarding } from "../../context/OnboardingContext";
 import { useTheme } from "../../context/ThemeContext";
-import { fh } from "../../../utils/responsive";
+import { fh, ff, fw, getLayoutConfig } from "../../../utils/responsive";
 import { useVideosStore } from "../../../utils/store/useVideosStore";
 import { debounceFetch } from "../../../utils/debounceFetch";
 import { useAppRefresh } from "../../../utils/useAppRefresh";
@@ -65,31 +65,31 @@ const ReelsScreen = () => {
 
   useEffect(() => {
     const now = global.performance?.now?.() ?? Date.now();
-      console.log(`📌 ${route.name} mounted at`, now);
+    console.log(`📌 ${route.name} mounted at`, now);
   }, []);
 
 
   // backhandler done by rishith
- useEffect(() => {
-  const backAction = () => {
-    // 1️⃣ If already on Latest tab → Go to ArticleScreen
-    if (activeTab === "latest") {
-      navigation.navigate("ArticleScreen");
-      return true; // stop global handler
-    }
+  useEffect(() => {
+    const backAction = () => {
+      // 1️⃣ If already on Latest tab → Go to ArticleScreen
+      if (activeTab === "latest") {
+        navigation.navigate("ArticleScreen");
+        return true; // stop global handler
+      }
 
-    // 2️⃣ If inside any category → switch back to Latest tab
-    setActiveTab("latest");
-    return true; // prevent global back action
-  };
+      // 2️⃣ If inside any category → switch back to Latest tab
+      setActiveTab("latest");
+      return true; // prevent global back action
+    };
 
-  const subscription = BackHandler.addEventListener(
-    "hardwareBackPress",
-    backAction
-  );
+    const subscription = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-  return () => subscription.remove();
-}, [activeTab]);
+    return () => subscription.remove();
+  }, [activeTab]);
 
 
 
@@ -104,7 +104,7 @@ const ReelsScreen = () => {
     loadMoreVideos,
     lastViewedIndexByCategory,
     setLastViewedIndex,
-  } = useVideosStore ();
+  } = useVideosStore();
 
   const { videoId, fromExclusive } = route.params || {};
   // Fetch initial page for current category when needed  
@@ -308,7 +308,7 @@ const ReelsScreen = () => {
       {/* Empty State */}
       {!isFetching && filteredVideos.length === 0 && (
         <View style={styles.loader}>
-          <Text style={{ color: "#fff", fontSize: 14, marginTop: fh(10) }}>
+          <Text style={{ color: "#fff", fontSize: ff(14), marginTop: fh(10) }}>
             No Reels Available
           </Text>
         </View>
@@ -357,8 +357,18 @@ export default ReelsScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000" },
   topBarWrap: {
-    position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, marginTop: fh(10),
-    marginBottom: fh(-20),
+    position: "absolute", 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    zIndex: 30, 
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 10),
+    marginBottom: fh(getLayoutConfig().isTablet ? -16 : -20),
   },
-  loader: { flex: 1, justifyContent: "center", alignItems: "center" },
+  loader: { 
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center",
+    paddingHorizontal: fw(20),
+  },
 });

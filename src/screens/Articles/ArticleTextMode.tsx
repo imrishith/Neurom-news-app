@@ -15,7 +15,7 @@ import FixedInteractionWrapper from "../../components/layout/FixedInteractionWra
 import Button from "../../components/Button";
 import SaveButton from "../../components/SaveButton";
 import InteractionsRow from "../../components/InteractionRow";
-import { fw, fh, ff } from "../../../utils/responsive";
+import { fw, fh, ff, fr, getLayoutConfig } from "../../../utils/responsive";
 import { timeAgo } from "../../../utils/timeAgo";
 import { shareToWhatsApp } from "../../../utils/shareUtils";
 import { Colors } from "react-native/Libraries/NewAppScreen";
@@ -328,17 +328,17 @@ const ArticleTextMode: React.FC<ArticleTextModeProps> = ({
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    width: SCREEN_W,
+    width: "100%",
     alignSelf: "center",
     overflow: "hidden",
-    marginVertical: fh(8),
+    marginVertical: fh(getLayoutConfig().isTablet ? 12 : 8),
     backgroundColor: "#000",
   },
   topOverlay: {
     position: "absolute",
-    top: fh(12),
-    left: fw(16),
-    right: fw(16),
+    top: fh(getLayoutConfig().isTablet ? 16 : 12),
+    left: getLayoutConfig().contentPadding,
+    right: getLayoutConfig().contentPadding,
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -349,29 +349,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderWidth: 0.4,
     borderColor: '#FFFFFF',
-    fontSize: ff(10),
+    fontSize: ff(getLayoutConfig().isTablet ? 12 : 10),
     fontWeight: '500',
-    paddingHorizontal: fw(12),
-    paddingVertical: fh(4),          // ✅ balanced vertical padding
-    borderRadius: fh(12),            // ✅ matches vertical height for perfect oval
-    lineHeight: ff(14),              // ✅ vertically centered text on iOS
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
+    borderRadius: fr(getLayoutConfig().isTablet ? 16 : 12),
+    lineHeight: ff(getLayoutConfig().isTablet ? 18 : 14),
     textAlign: 'center',
     alignSelf: 'center',
-    minWidth: fw(70),
+    minWidth: fw(getLayoutConfig().isTablet ? 84 : 70),
     overflow: 'visible',
   },
 
-
   tridotButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',  // same tint as articleId
-    padding: fw(6),                         // inner spacing around icon
-    borderRadius: fw(20),                   // makes it perfectly round
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    padding: fw(getLayoutConfig().isTablet ? 8 : 6),
+    borderRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
     justifyContent: 'center',
     alignItems: 'center',
   },
   tridotIcon: {
-    width: fw(14),
-    height: fh(14),
+    width: fw(getLayoutConfig().isTablet ? 18 : 14),
+    height: fh(getLayoutConfig().isTablet ? 18 : 14),
     tintColor: "#fff",
   },
   imageContainer: {
@@ -382,38 +381,37 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",      // ✅ Perfectly fills the space, no black edges
+    resizeMode: "cover",
   },
-
 
   bottomSection: {
     flex: 1,
-    borderTopLeftRadius: fw(20),
-    borderTopRightRadius: fw(20),
-    overflow: "visible",  // ✅ prevents clipping of Telugu top/bottom glyphs
+    borderTopLeftRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
+    borderTopRightRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
+    overflow: "visible",
     justifyContent: "space-between",
     marginTop: fh(-BUTTON_HEIGHT * 0.95),
   },
 
   contentWrap: {
     flex: 1,
-    paddingHorizontal: fw(16),
-    paddingTop: fh(8),
-    paddingBottom: fh(10),
-    overflow: "visible",   // ✅ allows CoreText to render full ascenders/descenders
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingTop: fh(getLayoutConfig().isTablet ? 12 : 8),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 14 : 10),
+    overflow: "visible",
   },
   descriptionScroll: {
     flex: 1,
     minHeight: 0,
   },
   descriptionScrollContent: {
-    paddingBottom: fh(4),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 8 : 4),
   },
   dividerRow: {
     position: "absolute",
-    top: SCREEN_H * 0.001, // place just below image
-    left: fw(16),
-    right: fw(16),
+    top: SCREEN_H * 0.001,
+    left: getLayoutConfig().contentPadding,
+    right: getLayoutConfig().contentPadding,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -421,66 +419,69 @@ const styles = StyleSheet.create({
   },
 
   chipButton: {
-    paddingHorizontal: fw(12),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
     height: BUTTON_HEIGHT,
-    paddingVertical: fh(4),
-    borderRadius: fw(20),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
+    borderRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
     alignSelf: 'flex-start',
   },
   chipButtonText: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "500",
     color: "#fff",
   },
   rightActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: fw(8),
+    gap: fw(getLayoutConfig().isTablet ? 12 : 8),
   },
   toggleWrapper: {
     flexDirection: "row",
-    borderRadius: fw(20),
+    borderRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
     overflow: "hidden",
     height: BUTTON_HEIGHT,
     backgroundColor: "#fff",
   },
   toggleButton: {
-    paddingHorizontal: fw(12),
-    paddingVertical: fh(4),
+    paddingHorizontal: fw(getLayoutConfig().isTablet ? 16 : 12),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 6 : 4),
     justifyContent: 'center',
     alignItems: 'center',
   },
   toggleActive: {
     backgroundColor: "#997DDF",
-    borderRadius: fw(20),
+    borderRadius: fr(getLayoutConfig().isTablet ? 24 : 20),
   },
   toggleText: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     textAlignVertical: 'center',
+    includeFontPadding: false,
   },
   title: {
-    fontSize: ff(18),
+    fontSize: ff(getLayoutConfig().isTablet ? 20 : 18),
     fontWeight: "700",
-    lineHeight: ff(32),
-    marginTop: fh(5),
-    paddingVertical: fh(3),
+    lineHeight: ff(getLayoutConfig().isTablet ? 28 : 32),
+    marginTop: fh(getLayoutConfig().isTablet ? 8 : 5),
+    paddingVertical: fh(getLayoutConfig().isTablet ? 5 : 3),
     overflow: "hidden",
+    includeFontPadding: false,
   },
 
   description: {
-    fontSize: ff(16),
+    fontSize: ff(getLayoutConfig().isTablet ? 18 : 16),
     letterSpacing: 0.3,
-    lineHeight: ff(22),            // ✅ matches iOS native line height
+    lineHeight: ff(getLayoutConfig().isTablet ? 26 : 22),
     overflow: "hidden",
+    includeFontPadding: false,
   },
   footerContainer: {
-    paddingBottom: fh(45),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 60 : 45),
   },
 
   footer: {
-    paddingHorizontal: fw(16),
-    paddingTop: fh(8),
-    paddingBottom: fh(16),
+    paddingHorizontal: getLayoutConfig().contentPadding,
+    paddingTop: fh(getLayoutConfig().isTablet ? 12 : 8),
+    paddingBottom: fh(getLayoutConfig().isTablet ? 20 : 16),
     justifyContent: "flex-end",
   },
 
@@ -488,28 +489,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: fh(8),
+    marginBottom: fh(getLayoutConfig().isTablet ? 12 : 8),
   },
 
   interactionsContainer: {
     alignSelf: "center",
-    width: fw(277),
+    width: fw(getLayoutConfig().isTablet ? 340 : 277),
+    maxWidth: getLayoutConfig().isTablet ? "90%" : "85%",
   },
 
   paginationText: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "500",
+    includeFontPadding: false,
   },
 
   metaRight: {
-    fontSize: ff(12),
+    fontSize: ff(getLayoutConfig().isTablet ? 14 : 12),
     fontWeight: "500",
+    includeFontPadding: false,
   },
 
   overlayActions: {
     position: "relative",
-    marginTop: fh(-BUTTON_HEIGHT * 1), // adjust a bit upward if needed
-    marginHorizontal: fw(16),
+    marginTop: fh(-BUTTON_HEIGHT * 1),
+    marginHorizontal: getLayoutConfig().contentPadding,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -536,10 +540,6 @@ const styles = StyleSheet.create({
     zIndex: 5,
     opacity: 0.9,
   },
-
-
-
-
 });
 
 export default React.memo(ArticleTextMode);

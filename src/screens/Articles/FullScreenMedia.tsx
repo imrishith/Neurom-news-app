@@ -3,6 +3,7 @@ import React, { Suspense, useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, StatusBar, ActivityIndicator } from "react-native";
 import { useAdaptiveVideo } from "../../../utils/useAdaptiveVideo";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { fw, fh, ff, fr } from "../../../utils/responsive";
 
 const FullScreenMedia = () => {
   const route = useRoute<any>();
@@ -39,7 +40,7 @@ const FullScreenMedia = () => {
         <Image source={{ uri: media.url }} style={styles.fullscreen} resizeMode="contain" />
       )}
       <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
-        <Image source={require("../../../assets/icons/person.png")} style={{ width: 30, height: 30, tintColor: "#fff" }} />
+        <Image source={require("../../../assets/icons/person.png")} style={styles.closeIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -50,12 +51,17 @@ const styles = StyleSheet.create({
   fullscreen: { flex: 1 },
   closeButton: {
     position: "absolute",
-    top: 40,
-    right: 20,
+    top: fh(40),
+    right: fw(20),
     backgroundColor: "rgba(0,0,0,0.6)",
-    padding: 8,
-    borderRadius: 20,
+    padding: fw(8),
+    borderRadius: fr(20),
   },
+  closeIcon: {
+    width: fw(30),
+    height: fw(30),
+    tintColor: "#fff"
+  }
 });
 
 export default FullScreenMedia;
