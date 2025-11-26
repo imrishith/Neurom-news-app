@@ -1,0 +1,896 @@
+   1: import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
+   1: import {
+   1:   View,
+   1:   StyleSheet,
+   1:   Dimensions,
+   1:   ActivityIndicator,
+   1:   Image,
+   1:   StatusBar,
+   1:   Text,
+   1:   Platform,
+   1:   RefreshControl, ScrollView,
+   1:   BackHandler,
+   1:   FlatList,
+   1: } from "react-native";
+   1: import { SafeAreaView } from "react-native-safe-area-context";
+   1: import LinearGradient from "react-native-linear-gradient";
+   1: import PagerView from "react-native-pager-view";
+   1: import { useNavigation } from "@react-navigation/native";
+   1: import SidebarPanel from "../Sidebar/SidebarPanel";
+   1: import ShareModal from "../../components/ShareModal";
+   1: import { shareToWhatsApp } from "../../../utils/shareUtils";
+   1: import CommentModal from "../../components/CommentModal";
+   1: import InteractionsRow from "../../components/InteractionRow";
+   1: 
+   1: import { useContentStore } from "../../../utils/contentStore";
+   1: import Video from "react-native-video";
+   1: import NetInfo from "@react-native-community/netinfo";
+   1: import FastImage from "react-native-fast-image";
+   1: import { useOnboarding } from "../../context/OnboardingContext";
+   1: import { useContentTabs } from "../../hooks/useContentTabs";
+   1: import Colors from "../../constants/colors";
+   1: import { fw, fh, getBuzzInteractionOffset, getBuzzImageOffset, getBuzzVerticalOffset } from "../../../utils/responsive";
+   1: import { useIsFocused } from "@react-navigation/native";
+   1: // ✅ import TopBar + Button
+   1: import TopBar from "../../components/TopBar";
+   1: import TopBarContainer from "../../components/layout/TopBarContainer";
+   1: import Button from "../../components/Button";
+   1: import { useAppRefresh } from "../../../utils/useAppRefresh";
+   1: import { MMKV } from "react-native-mmkv";
+   1: import BuzzShareModal from "../../components/share/buzz/BuzzShareModal";
+   1: import MagazineShareModal from "../../components/share/magazine/MagazineShareModal";
+   1: const mmkv = new MMKV();
+   1: 
+   1: 
+   1: const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
+   1: 
+   1: const STATUS_BAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight || 0 : 44; // iPhone notch ~44
+   1: const BOTTOM_BAR_HEIGHT = fh(60); // your BottomBar height
+   1: 
+   1: const imageHeight = Dimensions.get("window").height - STATUS_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
+   1: 
+   1: 
+   1: // Shuffle helper
+   1: function shuffleArray<T>(array: T[]): T[] {
+   1:   const arr = [...array];
+   1:   for (let i = arr.length - 1; i > 0; i--) {
+   1:     const j = Math.floor(Math.random() * (i + 1));
+   1:     [arr[i], arr[j]] = [arr[j], arr[i]];
+   1:   }
+   1:   return arr;
+   1: }
+   1: 
+   1: const BuzzScreen = () => {
+   1: 
+   1:   const hasResetRef = useRef(false);
+   1: 
+   1:   useEffect(() => {
+   1:     const now = Date.now();
+   1:     const lastSession = mmkv.getNumber("lastSession") ?? 0;
+   1:     const isColdStart = now - lastSession > 10 * 1000; // gap >10s means app was killed
+   1: 
+   1:     if (isColdStart && !hasResetRef.current) {
+   1: 
+   1:       hasResetRef.current = true;
+   1: 
+   1:       // 🧹 Reset Buzz-related state only
+   1:       useContentStore.setState({
+   1:         lastViewedBuzzIndex: 0,
+   1:       });
+   1:     }
+   1: 
+   1:     mmkv.set("lastSession", now);
+   1:   }, []);
+   1: 
+   1: 
+   1:   const { data, getLangCode } = useOnboarding();
+   1:   const lang = getLangCode();
+   1:   const { tabs = [], categories = [], activeTab, setActiveTab, selectedCategories = [], setSelectedCategories } = useContentTabs();
+   1:   const {
+   1:     buzzContents,
+   1:     magazines,
+   1:     fetchBuzzContents,
+   1:     fetchMagazines,
+   1:     loadMoreBuzz,
+   1:     loadMoreMagazines,
+   1:     buzzHasMore,
+   1:     magHasMore,
+   1:     setLastViewedBuzzIndex,
+   1:     lastViewedBuzzIndex,
+   1:   } = useContentStore();
+   1: 
+   1: 
+   1:   // Local state and view control
+   1:   const { dailyWraps, fetchDailyWraps } = useContentStore();
+   1:   const wrap = useMemo(() => {
+   1:     const today = new Date().toISOString().split("T")[0];
+   1:     return (dailyWraps || []).find((w: any) => w.published_at?.startsWith?.(today));
+   1:   }, [dailyWraps]);
+   1:   const [loading, setLoading] = useState(true);
+   1:   const [isSidebarVisible, setSidebarVisible] = useState(false);
+   1:   const [shareVisible, setShareVisible] = useState(false);
+   1:   const [commentVisible, setCommentVisible] = useState(false);
+   1:   const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
+   1:   const isFocused = useIsFocused();
+   1:   const [currentPage, setCurrentPage] = useState(0);
+   1:   const [loadedPages, setLoadedPages] = useState<Set<number>>(new Set([0]));
+   1:   const [refreshing, setRefreshing] = useState(false);
+   1:   const [speedMbps, setSpeedMbps] = useState<number | null>(null);
+   1: 
+   1:   const [buzzPage, setBuzzPage] = useState(1);
+   1:   const [magPage, setMagPage] = useState(1);
+   1:   const [hasMoreBuzz, setHasMoreBuzz] = useState(true);
+   1:   const [hasMoreMag, setHasMoreMag] = useState(true);
+   1:   const pagerRef = useRef<PagerView>(null);
+   1:   // Local loading flags so whichever API returns first can display immediately
+   1:   const [catLoadingBuzz, setCatLoadingBuzz] = useState(false);
+   1:   const [catLoadingMag, setCatLoadingMag] = useState(false);
+   1: 
+   1:   const navigation = useNavigation();
+   1: 
+   1:   // Detect network speed once
+   1:   useEffect(() => {
+   1:     (async () => {
+   1:       try {
+   1:         const state = await NetInfo.fetch();
+   1:         const dl: any = (state as any)?.details?.downlink;
+   1:         if (typeof dl === "number" && dl > 0) setSpeedMbps(dl);
+   1:       } catch {
+   1:         setSpeedMbps(null);
+   1:       }
+   1:     })();
+   1:   }, []);
+   1: 
+   1:   const selectBestVariant = useCallback((media: any, mbps?: number | null) => {
+   1:     const variants: Record<string, string> | undefined = media?.variants;
+   1:     if (!variants) return null;
+   1:     let tier: "480p" | "720p" | "1080p" = "720p";
+   1:     if (typeof mbps === "number") {
+   1:       if (mbps < 1.5) tier = "480p";
+   1:       else if (mbps <= 3) tier = "720p";
+   1:       else tier = "1080p";
+   1:     }
+   1:     const chosen = variants[tier] || variants["720p"] || variants["480p"] || variants["1080p"];
+   1:     if (__DEV__) console.log(`🟣 Buzz wrap variant selected: ${tier} → ${chosen}`);
+   1:     return chosen || null;
+   1:   }, []);
+   1: 
+   1: 
+   1:   // ✅ Localized Tabs like ArticleScreen
+   1:   // Localized Tabs like ArticleScreen
+   1:   const localizedTabs = useMemo(() => {
+   1:     if (!tabs || tabs.length === 0) return [];
+   1:     const baseTabs = tabs.map((tab) => {
+   1:       if (tab.key === "state") {
+   1:         return { ...tab, label: String(data.village_name) };
+   1:       }
+   1:       return tab;
+   1:     });
+   1: 
+   1:     const sidebarTab = baseTabs.find((t) => t.key === "sidebar");
+   1:     const latestTab = baseTabs.find((t) => t.key === "latest");
+   1:     const stateTab = baseTabs.find((t) => t.key === "state");
+   1: 
+   1:     const selectedTabs = baseTabs.filter((t) =>
+   1:       selectedCategories.includes(t.key)
+   1:     );
+   1: 
+   1:     return [
+   1:       ...(sidebarTab ? [sidebarTab] : []),
+   1:       ...(latestTab ? [latestTab] : []),
+   1: 
+   1:       ...selectedTabs,
+   1:     ];
+   1:   }, [tabs, data.village_name, selectedCategories]);
+   1: 
+   1:   const handleRefresh = async () => {
+   1:     try {
+   1:       setRefreshing(true);
+   1: 
+   1:       const categoryId = getActiveCategoryId();
+   1:       await fetchBuzzContents(categoryId, true);  // skip cache
+   1:       await fetchMagazines(categoryId ?? null);
+   1:     } catch (err) {
+   1:       console.error("❌ Buzz refresh error:", err);
+   1:     } finally {
+   1:       setRefreshing(false);
+   1:     }
+   1:   };
+   1: 
+   1:   const combinedContent = useMemo(() => {
+   1:     const normalizedMagazines = (magazines || []).map((m) => {
+   1:       const langCode = getLangCode(); // 'te' or 'en'
+   1: 
+   1:       const title = langCode === "te" ? (m.title_te || null) : (m.title_en || null);
+   1:       const mediaUrl = langCode === "te" ? (m.media_te?.url || null) : (m.media_en?.url || null);
+   1:       const pages = langCode === "te" ? (m.pages_te || []) : (m.pages_en || []);
+   1:       const sortedPages = pages ? [...pages].sort((a: any, b: any) => (a?.page_number || 0) - (b?.page_number || 0)) : [];
+   1: 
+   1:       return {
+   1:         id: `mag-${m.magazine_id}`,
+   1:         type: "magazine" as const,
+   1:         title,
+   1:         mediaUrl,
+   1:         pages: sortedPages,
+   1:         createdAt: m.published_at || m.created_at,
+   1:         stats: m.stats || {},
+   1:         magazine_id: m.magazine_id,
+   1:         category: m.Category,
+   1:       };
+   1:     });
+   1: 
+   1: 
+   1: 
+   1:     const normalizedBuzz = (buzzContents || []).map((b) => {
+   1:       const langCode = getLangCode(); // 'te' or 'en'
+   1: 
+   1:       const mediaUrl =
+   1:         langCode === "te"
+   1:           ? b.media_te?.url || null
+   1:           : langCode === "en"
+   1:             ? b.media_en?.url || null
+   1:             : null; // in case future languages are added
+   1: 
+   1:       return {
+   1:         id: `buzz-${b.buzz_id}`,
+   1:         type: "buzz" as const,
+   1:         mediaUrl, // 👈 only selected language media
+   1:         createdAt: b.created_at,
+   1:         stats: b.stats || {},
+   1:         buzz_id: b.buzz_id,
+   1:         category: b.Category,
+   1:       };
+   1:     });
+   1: 
+   1: 
+   1:     // ✅ TypeScript-safe date sort
+   1:     const sortedBuzz = [...normalizedBuzz].sort(
+   1:       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+   1:     );
+   1:     const sortedMagazines = [...normalizedMagazines].sort(
+   1:       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+   1:     );
+   1: 
+   1:     // ✅ Buzz first, then Magazines
+   1:     const merged = [...sortedBuzz, ...sortedMagazines];
+   1: 
+   1:     return merged;
+   1:   }, [magazines, buzzContents]);
+   1: 
+   1: 
+   1:   // Fetch Daily Wraps (once; store handles caching)
+   1:   useEffect(() => {
+   1:     (async () => {
+   1:       try {
+   1:         setLoading(true);
+   1:         await fetchDailyWraps();
+   1:       } catch (e) {
+   1:       } finally {
+   1:         setLoading(false);
+   1:       }
+   1:     })();
+   1:   }, [fetchDailyWraps]);
+   1: 
+   1:   const getActiveCategoryId = useCallback(() => {
+   1:     if (activeTab === "latest") return null;
+   1:     if (!categories || categories.length === 0) return null;
+   1:     const cat = categories.find((c) => String(c.key) === String(activeTab));
+   1:     return cat ? Number(cat.category_id) : null;
+   1:   }, [activeTab, categories]);
+   1: 
+   1: 
+   1:   // Fetch Buzz + Magazines
+   1:   useEffect(() => {
+   1:     if (!categories || categories.length === 0) return;
+   1: 
+   1:     const categoryId = getActiveCategoryId();
+   1: 
+   1:     // 🧹 Clear previous category data when switching tabs
+   1:     useContentStore.setState({
+   1:       buzzContents: [],
+   1:       magazines: [],
+   1:       buzzCursor: null,
+   1:       magCursor: null,
+   1:       buzzHasMore: true,
+   1:       magHasMore: true,
+   1:     });
+   1: 
+   1:     // 🟢 Fetch both again for selected category (first-come-first-serve)
+   1:     setCatLoadingBuzz(true);
+   1:     setCatLoadingMag(true);
+   1:     fetchBuzzContents(categoryId, true).finally(() => setCatLoadingBuzz(false));
+   1:     fetchMagazines(categoryId ?? null).finally(() => setCatLoadingMag(false));
+   1:   }, [activeTab]);
+   1: 
+   1: 
+   1: 
+   1:   const feed = useMemo(() => {
+   1:     const langCode = getLangCode(); // 'te' or 'en'
+   1: 
+   1:     // Normalize wrap (only if it exists)
+   1:     const normalizedWrap = wrap
+   1:       ? {
+   1:         id: `wrap-${wrap.wrap_id}`,
+   1:         type: "wrap" as const,
+   1:         title: langCode === "te" ? (wrap.title_te || wrap.title_en || null) : (wrap.title_en || wrap.title_te || null),
+   1:         media: langCode === "te" ? wrap.media_te : wrap.media_en,
+   1:         thumbnail: (langCode === "te" ? wrap.media_te?.thumbnail : wrap.media_en?.thumbnail) || null,
+   1:         createdAt: wrap.published_at || wrap.created_at,
+   1:         stats: wrap.stats || {},
+   1:         wrap_id: wrap.wrap_id,
+   1:         category: wrap.Category || wrap.category || null,
+   1:       }
+   1:       : null;
+   1: 
+   1:     // Merge wrap + buzz/magazine content
+   1:     const list = normalizedWrap
+   1:       ? [normalizedWrap, ...combinedContent]
+   1:       : combinedContent;
+   1: 
+   1:     // Limit to top 30 items
+   1:     return list;
+   1:   }, [wrap, combinedContent, getLangCode()]);
+   1: 
+   1: 
+   1: 
+   1: 
+   1:   useEffect(() => {
+   1:     if (feed.length > 0 && isFocused) {
+   1:       const savedIndex = useContentStore.getState().lastViewedBuzzIndex ?? 0;
+   1: 
+   1:       // Adjust if wrap exists (because it adds an item to the front)
+   1:       const adjustedIndex = wrap ? savedIndex + 1 : savedIndex;
+   1:       const boundedIndex = Math.min(adjustedIndex, feed.length - 1);
+   1: 
+   1:       setCurrentPage(boundedIndex);
+   1: 
+   1:       requestAnimationFrame(() => {
+   1:         pagerRef.current?.setPageWithoutAnimation?.(boundedIndex);
+   1:       });
+   1:     }
+   1:   }, [feed.length, isFocused, wrap]);
+   1: 
+   1: 
+   1: 
+   1: 
+   1: 
+   1: 
+   1:   // ✅ Load adjacent pages when page changes
+   1:   useEffect(() => {
+   1:     if (!isFocused) return;
+   1: 
+   1:     const newLoadedPages = new Set(loadedPages);
+   1: 
+   1:     // Load current page and 1 adjacent page on either side
+   1:     newLoadedPages.add(currentPage);
+   1:     if (currentPage > 0) newLoadedPages.add(currentPage - 1);
+   1:     if (currentPage < feed.length - 1) newLoadedPages.add(currentPage + 1);
+   1: 
+   1:     // Unload pages that are too far away (keep current \u00B1 1 only)
+   1:     Array.from(newLoadedPages).forEach((page) => {
+   1:       if (Math.abs(page - currentPage) > 1) {
+   1:         newLoadedPages.delete(page);
+   1:       }
+   1:     });
+   1: 
+   1:     setLoadedPages(newLoadedPages);
+   1:   }, [currentPage, feed.length, isFocused]);
+   1: 
+   1:   // ✅ Track view events
+   1:   useEffect(() => {
+   1:     if (isFocused && feed[currentPage]) {
+   1:       const item = feed[currentPage];
+   1: 
+   1:     }
+   1:   }, [currentPage, feed, isFocused]);
+   1: 
+   1:   // ✅ Handle page change
+   1:   const handlePageSelected = useCallback(
+   1:     (e: any) => {
+   1:       const newIndex = e.nativeEvent.position;
+   1: 
+   1:       // 👇 1️⃣ Save current page to local state
+   1:       setCurrentPage(newIndex);
+   1: 
+   1:       // 👇 2️⃣ ✅ Save current page persistently in Zustand (this is the correct spot)
+   1:       useContentStore.getState().setLastViewedBuzzIndex(newIndex);
+   1: 
+   1:       // 👇 3️⃣ Pagination logic — keep this as-is
+   1:       if (newIndex >= feed.length - 2) {
+   1:         const categoryId = getActiveCategoryId();
+   1:         if (buzzHasMore) loadMoreBuzz(categoryId);
+   1:         if (magHasMore) loadMoreMagazines(categoryId ?? null);
+   1:       }
+   1:     },
+   1:     [feed.length, buzzHasMore, magHasMore]
+   1:   );
+   1: 
+   1:   // Local wrapper to memoize contentType for InteractionsRow
+   1:   const BuzzInteractionsRow: React.FC<{
+   1:     item: any;
+   1:     stats: {
+   1:       likes_count?: number;
+   1:       comments_count?: number;
+   1:       shares_count?: number;
+   1:       dislikes_count?: number;
+   1:       saves_count?: number;
+   1:       views_count?: number;
+   1:     };
+   1:     contentId: number | string;
+   1:   }> = ({ item, stats, contentId }) => {
+   1:     const contentType = useMemo(
+   1:       () => (item.type === "magazine" ? "magazines" : item.type === "wrap" ? "videos" : "buzz"),
+   1:       [item.type]
+   1:     );
+   1:     return (
+   1:       <InteractionsRow
+   1:         stats={stats}
+   1:         tintColor={Colors.textcolor}
+   1:         backgroundColor="#49425B33"
+   1:         deviceId={data.device_id}
+   1:         contentType={contentType}
+   1:         contentId={contentId}
+   1:         compact={false}
+   1:         onShare={() => setShareVisible(true)}
+   1:         onComment={() => {
+   1:           setSelectedContentId(item.buzz_id || item.wrap_id || item.magazine_id);
+   1:           setCommentVisible(true);
+   1:         }}
+   1:         containerStyle={styles.interactionsContainer}
+   1:       />
+   1:     );
+   1:   };
+   1: 
+   1: 
+   1:   // Inline components for wrap video and magazine pages
+   1:   const WrapVideoItem: React.FC<{ item: any; isActive: boolean }> = ({ item, isActive }) => {
+   1:     const [isBuffering, setIsBuffering] = useState(false);
+   1:     const [isPaused, setIsPaused] = useState(false);
+   1:     const uri = selectBestVariant(item.media, speedMbps);
+   1:     if (!uri) {
+   1:       return (
+   1:         <View style={styles.errorBox}>
+   1:           <Text style={styles.errorText}>Video unavailable</Text>
+   1:         </View>
+   1:       );
+   1:     }
+   1:     return (
+   1:       <View style={[styles.imageWrapper, { height: imageHeight }]}>        
+   1:         <Video
+   1:           source={{ uri }}
+   1:           style={styles.fullscreenImage}
+   1:           resizeMode="cover"
+   1:           paused={!isActive || isPaused}
+   1:           repeat
+   1:           onBuffer={(e) => setIsBuffering(e.isBuffering)}
+   1:           onLoadStart={() => setIsBuffering(true)}
+   1:           onLoad={() => setIsBuffering(false)}
+   1:         />
+   1:         <LinearGradient
+   1:           colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+   1:           start={{ x: 0, y: 0 }}
+   1:           end={{ x: 0, y: 1 }}
+   1:           style={styles.fullScreenGradient}
+   1:         />
+   1:         <View style={{ position: "absolute", left: fw(16), right: fw(16), bottom: fh(24) }}>
+   1:           {!!item.title && <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>{item.title}</Text>}
+   1:         </View>
+   1:         {isBuffering && (
+   1:           <View style={styles.placeholder}>
+   1:             <ActivityIndicator size="large" color="#FFFFFF" />
+   1:             <Text style={styles.placeholderText}>Loading...</Text>
+   1:           </View>
+   1:         )}
+   1:         {/* Tap overlay */}
+   1:         <ScrollView style={StyleSheet.absoluteFill} onTouchEnd={() => setIsPaused((p) => !p)} />
+   1:       </View>
+   1:     );
+   1:   };
+   1: 
+   1:   const MagazinePagesItem: React.FC<{ item: any; isActive: boolean }> = ({ item }) => {
+   1:     const [idx, setIdx] = useState(0);
+   1:     const pages = item.pages || [];
+   1:     if (!pages || pages.length === 0) {
+   1:       return (
+   1:         <View style={styles.errorBox}>
+   1:           <Text style={styles.errorText}>Pages not available</Text>
+   1:         </View>
+   1:       );
+   1:     }
+   1:     return (
+   1:       <View style={styles.slide}>
+   1:         <FlatList
+   1:           data={pages}
+   1:           keyExtractor={(p) => String(p.page_number)}
+   1:           renderItem={({ item: p }) => (
+   1:             <View style={styles.slide}>
+   1:               <FastImage source={{ uri: p.url }} style={styles.fullscreenImage} resizeMode={FastImage.resizeMode.contain} />
+   1:             </View>
+   1:           )}
+   1:           horizontal
+   1:           pagingEnabled
+   1:           showsHorizontalScrollIndicator={false}
+   1:           onMomentumScrollEnd={(e) => {
+   1:             const i = Math.round(e.nativeEvent.contentOffset.x / SCREEN_W);
+   1:             setIdx(i);
+   1:           }}
+   1:           initialNumToRender={1}
+   1:           maxToRenderPerBatch={2}
+   1:           windowSize={3}
+   1:           removeClippedSubviews
+   1:         />
+   1:         {/* <LinearGradient colors={["transparent", "rgba(0,0,0,0.7)"]} style={styles.fullScreenGradient} /> */}
+   1:         <View style={{ position: "absolute", left: fw(16), right: fw(16), bottom: fh(24) }}>
+   1:           {/* {!!item.title && <Text style={{ color: "#fff", fontSize: 16, fontWeight: "700" }}>{item.title}</Text>} */}
+   1:           <Text style={{ color: "#fff", marginTop: fh(4) }}>Page {idx + 1} / {pages.length}</Text>
+   1:         </View>
+   1:       </View>
+   1:     );
+   1:   };
+   1: 
+   1:   // ✅ Render content only if page is loaded
+   1:   const renderContent = useCallback(
+   1:     (item: any, index: number) => {
+   1:       const isLoaded = loadedPages.has(index);
+   1:       const isActive = currentPage === index;
+   1: 
+   1:       if (!isLoaded) {
+   1:         return (
+   1:           <View style={styles.placeholder}>
+   1:             <ActivityIndicator size="small" color="#FFFFFF" />
+   1:             <Text style={styles.placeholderText}>Loading...</Text>
+   1:           </View>
+   1:         );
+   1:       }
+   1: 
+   1:       // normalize stats
+   1:       const stats = {
+   1:         likes_count: Number(item.stats?.likes_count || 0),
+   1:         comments_count: Number(item.stats?.comments_count || 0),
+   1:         shares_count: Number(item.stats?.shares_count || 0),
+   1:         dislikes_count: Number(item.stats?.dislikes_count || 0),
+   1:         saves_count: Number(item.stats?.saves_count || 0),
+   1:         views_count: Number(item.stats?.views_count || 0),
+   1:       };
+   1: 
+   1:       // ✅ category chip label
+   1:       const categoryName =
+   1:         data.language_code === "te"
+   1:           ? item.category?.name_te || item.category?.name_en || "Buzz"
+   1:           : item.category?.name_en || "Buzz";
+   1: 
+   1:       return (
+   1:         <>
+   1:           {item.type === "wrap" ? (
+   1:             <WrapVideoItem item={item} isActive={isActive} />
+   1:           ) : item.type === "magazine" ? (
+   1:             <MagazinePagesItem item={item} isActive={isActive} />
+   1:           ) : item.mediaUrl ? (
+   1:             <View style={[styles.imageWrapper, { height: imageHeight }]}>
+   1:               <FastImage
+   1:                 source={{ uri: item.mediaUrl, priority: FastImage.priority.normal }}
+   1:                 style={styles.fullscreenImage}
+   1:                 resizeMode={FastImage.resizeMode.contain}
+   1:               />
+   1:             </View>
+   1:           ) : (
+   1:             <View style={styles.errorBox}>
+   1:               <Text style={styles.errorText}>
+   1:                 {getLangCode() === "te" ? "తెలుగు మీడియాలో అందుబాటులో లేదు" : "Media not available"}
+   1:               </Text>
+   1:             </View>
+   1:           )}
+   1: 
+   1:           {isActive && (
+   1:             <View style={styles.interactionsViewContainer}>
+   1:               <BuzzInteractionsRow item={item} stats={stats} contentId={item.wrap_id || item.magazine_id || item.buzz_id} />
+   1:             </View>
+   1:           )}
+   1:         </>
+   1:       );
+   1:     },
+   1:     [loadedPages, currentPage]
+   1:   );
+   1: 
+   1: 
+   1:   return (
+   1:     <View style={styles.root}>
+   1:       <StatusBar barStyle="light-content" backgroundColor="#000" translucent />
+   1:       <SafeAreaView edges={["bottom"]} style={styles.safeArea}>
+   1:         {/**
+   1:          * FIX: TopBar horizontal scroll felt blocked because this gradient view sat above it
+   1:          * and intercepted touches. On Android, zIndex only applies to positioned elements;
+   1:          * since the TopBar wrapper wasn't positioned, the absolutely positioned gradient
+   1:          * with zIndex ended up in front, capturing gestures.
+   1:          *
+   1:          * Solution: keep the gradient visible but non-interactive and ensure the TopBar
+   1:          * is a positioned sibling with a higher zIndex. `pointerEvents="none"` here lets
+   1:          * all touches pass through to the TopBar and underlying content.
+   1:          */}
+   1:         <LinearGradient
+   1:           colors={[
+   1:             "rgba(0, 0, 0, 0.6)",  // start – darker top
+   1:             "rgba(0, 0, 0, 0.0)",  // end – fully transparent
+   1:           ]}
+   1:           start={{ x: 0, y: 0 }}
+   1:           end={{ x: 0, y: 1 }}
+   1:           style={styles.shadowOverlay}
+   1:           pointerEvents="none"
+   1:         />
+   1: 
+   1: 
+   1:         {/* ✅ TopBar same like ArticleScreen */}
+   1:         {/**
+   1:          * Ensure the TopBar is fully touchable above overlays:
+   1:          * - Make it positioned (absolute) so zIndex works reliably on Android.
+   1:          * - Give it a high zIndex (> 50) so it renders above the gradient.
+   1:          * - Keep container pointerEvents allowing its children to handle touches.
+   1:          */}
+   1:         <View
+   1:           style={styles.topBarWrap}
+   1:           pointerEvents="box-none"
+   1:         >
+   1:           <TopBarContainer backgroundColor="transparent">
+   1:             <TopBar
+   1:               tabs={localizedTabs}
+   1:               activeTab={activeTab}
+   1:               onTabPress={(key) => {
+   1:                 if (key === "sidebar") setSidebarVisible(true);
+   1:                 else setActiveTab(key);
+   1:               }}
+   1:               labelStyle={{ color: "rgba(255,255,255,0.7)" }}
+   1:               activeLabelStyle={{ color: "#FFF", fontWeight: "700" }}
+   1:             />
+   1:           </TopBarContainer>
+   1:         </View>
+   1: 
+   1: 
+   1:         {/* Content area: loader, empty state, or pager */}
+   1:         {feed.length === 0 && (catLoadingBuzz || catLoadingMag) ? (
+   1:           <View style={styles.loader}>
+   1:             <ActivityIndicator size="large" color={Colors.lavenderPurple} />
+   1:             <Text style={styles.loadingText}>Loading content...</Text>
+   1:           </View>
+   1:         ) : feed.length === 0 ? (
+   1:           <View style={styles.loader}>
+   1:             <Text style={styles.noContentText}>No content available</Text>
+   1:           </View>
+   1:         ) : isFocused ? (
+   1: 
+   1:           <ScrollView
+   1:             contentContainerStyle={{ flexGrow: 1 }}
+   1:             refreshControl={
+   1:               currentPage === 0 ? (
+   1:                 <RefreshControl
+   1:                   refreshing={refreshing}
+   1:                   onRefresh={handleRefresh}
+   1:                   colors={["#997DDF"]}
+   1:                   tintColor="#997DDF"
+   1:                   title="Refreshing..."
+   1:                   titleColor="#fff"
+   1:                 />
+   1:               ) : undefined
+   1:             }
+   1:           >
+   1: 
+   1:             <PagerView
+   1:               ref={pagerRef}
+   1:               style={styles.pager}
+   1:               orientation="vertical"
+   1:               initialPage={lastViewedBuzzIndex || 0}
+   1:               offscreenPageLimit={1}
+   1:               onPageSelected={handlePageSelected}
+   1:               overdrag={false}           // prevent edge over-scroll
+   1:               pageMargin={0}             // remove slop
+   1:               layoutDirection="ltr"      // force LTR
+   1:               scrollEnabled={true}
+   1:               // 👇 ADD THIS:
+   1:               onPageScrollStateChanged={(e) => {
+   1:                 // prevent side gestures causing unintentional navigation
+   1:                 const state = e.nativeEvent.pageScrollState;
+   1:                 if (state === 'dragging') {
+   1:                   // disable horizontal gestures inside PDF area
+   1:                   pagerRef.current?.setScrollEnabled(true);
+   1:                 }
+   1:               }}
+   1:             >
+   1:               {feed.map((item, index) => (
+   1:                 <View key={item.id} style={styles.slide}>
+   1:                   {renderContent(item, index)}
+   1:                 </View>
+   1:               ))}
+   1:             </PagerView>
+   1:           </ScrollView>
+   1: 
+   1:         ) : (
+   1:           <View style={styles.placeholderContainer}>
+   1:             <Text style={styles.placeholderText}>Content paused</Text>
+   1:           </View>
+   1:         )}
+   1:       </SafeAreaView>
+   1: 
+   1:       {/**
+   1:        * FIX CONT'D: Render TopBar at the root level (sibling of SafeAreaView) so it sits above
+   1:        * PagerView and is not clipped by any parent bounds. This mirrors ArticleScreen where
+   1:        * TopBar scrolling works correctly.
+   1:        */}
+   1:       <TopBarContainer backgroundColor="transparent">
+   1:         <TopBar
+   1:           tabs={localizedTabs}
+   1:           activeTab={activeTab}
+   1:           onTabPress={(key) => {
+   1:             if (key === "sidebar") setSidebarVisible(true);
+   1:             else setActiveTab(key);
+   1:           }}
+   1:           labelStyle={{ color: "rgba(255,255,255,0.7)" }}
+   1:           activeLabelStyle={{ color: "#FFF", fontWeight: "700" }}
+   1:         />
+   1:       </TopBarContainer>
+   1: 
+   1:       {/* Modals */}
+   1:       <SidebarPanel
+   1:         visible={isSidebarVisible}
+   1:         onClose={() => setSidebarVisible(false)}
+   1:         categories={categories}
+   1:         selectedCategories={selectedCategories}
+   1:         activeCategoryKey={activeTab}
+   1:         onCategoryPress={(cat) => {
+   1:           setSelectedCategories((prev) =>
+   1:             prev.includes(cat.key)
+   1:               ? prev.filter((c) => c !== cat.key)
+   1:               : [...prev, cat.key]
+   1:           );
+   1:         }}
+   1:       />
+   1: 
+   1:       <CommentModal
+   1:         visible={commentVisible}
+   1:         onClose={() => setCommentVisible(false)}
+   1:         contentId={selectedContentId || 0}
+   1:         contentType="buzz"
+   1:       />
+   1: 
+   1:       {shareVisible && feed[currentPage] && (
+   1:         feed[currentPage].type === "buzz" ? (
+   1:           <BuzzShareModal visible={shareVisible} onClose={() => setShareVisible(false)} buzz={feed[currentPage]} />
+   1:         ) : feed[currentPage].type === "magazine" ? (
+   1:           <MagazineShareModal visible={shareVisible} onClose={() => setShareVisible(false)} magazine={feed[currentPage]} />
+   1:         ) : null
+   1:       )}
+   1:     </View>
+   1:   );
+   1: };
+   1: 
+   1: export default BuzzScreen;
+   1: 
+   1: const styles = StyleSheet.create({
+   1:   root: { flex: 1, backgroundColor: "#000" },
+   1:   safeArea: { flex: 1, backgroundColor: "#000" },
+   1:   pager: { flex: 1 },
+   1:   slide: { width: SCREEN_W, height: SCREEN_H, position: "relative" },
+   1:   // These styles are for the new image wrapping logic
+   1:   imageWrapper: {
+   1:     width: SCREEN_W,
+   1:     height: SCREEN_H,
+   1:     position: "absolute",
+   1:     top: 0,
+   1:     left: 0,
+   1:     backgroundColor: "#000", // fallback
+   1:   },
+   1: 
+   1:   fullscreenImage: {
+   1:     width: SCREEN_W,
+   1:     height: SCREEN_H,
+   1:     resizeMode: "contain", // stretches to fill full height & width
+   1:     transform: [{ translateY: getBuzzVerticalOffset() }],
+   1:   },
+   1: 
+   1:   contentImage: {
+   1:     width: "100%",
+   1:     aspectRatio: 920 / 1700, // 👈 keep correct proportion (or use media.width/media.height dynamically)
+   1:     resizeMode: "cover",
+   1:     borderRadius: 0,
+   1:   },
+   1: 
+   1:   fullScreenGradient: {
+   1:     ...StyleSheet.absoluteFillObject,
+   1:     top: 0,
+   1:     height: fh(220),
+   1:     zIndex: 1,
+   1:   },
+   1:   loader: {
+   1:     flex: 1,
+   1:     justifyContent: "center",
+   1:     alignItems: "center",
+   1:     backgroundColor: "#000",
+   1:   },
+   1:   loadingText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 16 },
+   1:   noContentText: { color: "#FFFFFF", fontSize: 16 },
+   1:   errorBox: {
+   1:     flex: 1,
+   1:     width: "100%",
+   1:     justifyContent: "center",
+   1:     alignItems: "center",
+   1:     backgroundColor: "#000",
+   1:     paddingHorizontal: fw(20),
+   1:   },
+   1: 
+   1:   errorText: {
+   1:     color: "#fff",
+   1:     fontSize: 16,
+   1:     textAlign: "center",
+   1:     includeFontPadding: false, // ✅ ensures full vertical visibility
+   1:     textAlignVertical: "center", // ✅ Android fix
+   1:     flexWrap: "wrap", // ✅ prevents truncation
+   1:     width: "90%", // ✅ ensures wrapping within safe area
+   1:   },
+   1: 
+   1: 
+   1:   placeholder: {
+   1:     flex: 1,
+   1:     justifyContent: "center",
+   1:     alignItems: "center",
+   1:     backgroundColor: "#111",
+   1:   },
+   1:   placeholderText: { color: "#FFFFFF", marginTop: fh(10), fontSize: 14 },
+   1:   placeholderContainer: {
+   1:     flex: 1,
+   1:     justifyContent: "center",
+   1:     alignItems: "center",
+   1: 
+   1:   },
+   1:   topBarWrap: {
+   1:     // FIX: Must be positioned for zIndex to apply on Android. This lifts the TopBar
+   1:     // above the gradient while keeping it visually pinned at the top.
+   1:     position: "absolute",
+   1:     top: fh(20),
+   1:     left: 0,
+   1:     right: 0,
+   1:     zIndex: 100, // keep well above overlays to ensure touchability
+   1:     // Hide the in-SafeArea TopBar instance; we render one at the root level instead.
+   1:     display: "none",
+   1:   },
+   1:   chipWrapper: {
+   1:     position: "absolute",
+   1:     top: fh(100),
+   1:     left: fw(16),
+   1:     zIndex: 15,
+   1:   },
+   1:   chipButton: {
+   1:     paddingHorizontal: fw(8),
+   1:     paddingVertical: fh(4),
+   1:     borderRadius: fw(20),
+   1:     top: fh(20),
+   1:   },
+   1: 
+   1:   interactionsViewContainer: {
+   1:     position: "absolute",
+   1:     bottom: getBuzzInteractionOffset(), // dynamic safe area offset
+   1:     left: 0,
+   1:     right: 0,
+   1:     alignItems: "center",      // centers children horizontally
+   1:     justifyContent: "center",
+   1:     zIndex: 20,                // ensures it's above the image
+   1:   },
+   1: 
+   1:   interactionsContainer: {
+   1:     alignSelf: "center",
+   1:     width: fw(277),
+   1:   },
+   1: 
+   1: 
+   1: 
+   1:   shadowOverlay: {
+   1:     // Gradient sits visually below the TopBar but above content.
+   1:     // It's non-interactive via pointerEvents="none" in JSX.
+   1:     position: "absolute",
+   1:     top: 0,
+   1:     left: 0,
+   1:     right: 0,
+   1:     height: fh(250), // adjust intensity range
+   1:     zIndex: 1,
+   1:     opacity: 0.9, // optional global fade (can tweak)
+   1:   },
+   1: 
+   1: });
+

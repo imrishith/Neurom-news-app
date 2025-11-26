@@ -1,0 +1,250 @@
+// screens/Article/ArticleScreen.tsx
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  Dimensions,
+  ActivityIndicator,
+  NativeEventEmitter, 
+  NativeModules,
+  AppState
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRoute } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+
+import { useContentTabs } from "../../hooks/useContentTabs";
+import { useTheme } from "../../context/ThemeContext";
+import { useOnboarding } from "../../context/OnboardingContext";
+import { useContentStore } from "../../../utils/contentStore";
+
+import TopBar from "../../components/TopBar";
+import ShareModal from "../../components/ShareModal";
+import CommentModal from "../../components/CommentModal";
+import ReportModal from "../../components/ReportModal";
+import SidebarPanel from "../Sidebar/SidebarPanel";
+import DeckSwiper from "../../components/DeckSwiper";
+import ArticleTextMode from "./ArticleTextMode";
+import ArticleAudioMode from "./ArticleAudioMode";
+
+import Tts from "react-native-tts";
+import { fw, fh, ff } from "../../../utils/responsive";
+
+const { height: SCREEN_H, width: SCREEN_W } = Dimensions.get("window");
+
+const ArticleScreen = () => {
+  // State Management
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [shareVisible, setShareVisible] = useState(false);
+  const [commentVisible, setCommentVisible] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [isTextMode, setIsTextMode] = useState(true);
+  const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // Hooks and Context
+  const { tabs, categories, activeTab, setActiveTab } = useContentTabs();
+  const { Colors, barStyle } = useTheme();
+  const { t, getFont, getLangCode, data } = useOnboarding();
+  const route = useRoute<any>();
+  const { articleId, mode } = route.params || {};
+  
+  const { articles, fetchArticles, loadMoreArticles, hasMore, isFetching } = useContentStore();
+
+  // Voice Configuration
+  const VOICE_MAP: Record<string, { lang: string; id: string }> = {
+    Telugu_Female: { lang: "te-IN", id: "te-in-x-tee-network" },
+    Telugu_Male: { lang: "te-IN", id: "te-in-x-teg-local" },
+    English_Female: { lang: "en-IN", id: "en-in-x-enc-network" },
+    English_Male: { lang: "en-IN", id: "en-in-x-ene-network" },
+  };
+
+  // Memoized localized tabs
+  const localizedTabs = useMemo(() => {
+    const baseTabs = tabs.map((tab) => {
+      if (tab.key === "state") {
+        return { ...tab, label: String(data.village_name) };
+      }
+      return tab;
+    });
+
+    const sidebarTab = baseTabs.find((t) => t.key === "sidebar");
+    const latestTab = baseTabs.find((t) => t.key === "latest");
+    const stateTab = baseTabs.find((t) => t.key === "state");
+
+    const selectedTabs = baseTabs.filter((t) =>
+      selectedCategories.includes(t.key)
+    );
+
+    const orderedTabs = [
+      ...(sidebarTab ? [sidebarTab] : []),
+      ...(latestTab ? [latestTab] : []),
+      ...(stateTab ? [stateTab] : []),
+      ...selectedTabs,
+    ];
+
+    return orderedTabs;
+  }, [tabs, data.village_name, selectedCategories]);
+
+  // Filter posts
+  const { posts, startIndex } = useMemo(() => {
+    let filtered = articles;
+    let startIdx = 0;
+
+    if (articleId) {
+      const idx = filtered.findIndex((a: any) => a.article_id === articleId);
+      startIdx = idx >= 0 ? idx : 0;
+    }
+
+    return { posts: filtered, startIndex: startIdx };
+  }, [articles, activeTab, articleId]);
+
+  // Fetch articles
+  useEffect(() => {
+   
+    fetchArticles();
+  }, []);
+
+  // Initialize selected article
+  useEffect(() => {
+    if (posts.length > 0 && currentIndex === 0 && !selectedArticle) {
+      setSelectedArticle(posts[startIndex]);
+      setCurrentIndex(startIndex);
+    }
+  }, [posts]);
+
+  // TTS Setup and cleanup
+  useEffect(() => {
+    Tts.setDefaultRate(0.5);
+    Tts.setDefaultPitch(1.0);
+
+    return () => {
+      Tts.stop();
+      setIsSpeaking(false);
+    };
+  }, []);
+
+  // TTS Event Listeners
+  useEffect(() => {
+    const ttsEmitter = new NativeEventEmitter(NativeModules.TextToSpeech);
+
+    const startListener = ttsEmitter.addListener("tts-start", () => {
+      setIsSpeaking(true);
+    });
+    const finishListener = ttsEmitter.addListener("tts-finish", () => {
+      setIsSpeaking(false);
+    });
+    const cancelListener = ttsEmitter.addListener("tts-cancel", () => {
+      setIsSpeaking(false);
+    });
+
+    return () => {
+      startListener.remove();
+      finishListener.remove();
+      cancelListener.remove();
+    };
+  }, []);
+
+  // App state and focus management
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        Tts.stop();
+        setIsSpeaking(false);
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState.match(/inactive|background/)) {
+        Tts.stop();
+        setIsSpeaking(false);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  // Mode initialization
+  useEffect(() => {
+    if (mode === "audio") {
+      setIsTextMode(false);
+    }
+  }, [mode]);
+
+  // TTS for audio mode
+  useEffect(() => {
+    if (!selectedArticle || isTextMode) {
+      Tts.stop();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const isTelugu = getLangCode() === "te";
+    const description = isTelugu
+      ? selectedArticle.content_te
+      : selectedArticle.content_en;
+
+    if (!description) return;
+
+    if (!isSpeaking) {
+      const normalizedVoice = (data.voice || "Female").toLowerCase();
+      
+      const key = `${isTelugu ? "Telugu" : "English"}_${normalizedVoice === "male" ? "Male" : "Female"}`;
+      const voiceConfig = VOICE_MAP[key] || VOICE_MAP[`${isTelugu ? "Telugu" : "English"}_Female`];
+
+      if (voiceConfig?.id) {
+        Tts.setDefaultVoice(voiceConfig.id);
+      } else if (voiceConfig?.lang) {
+        Tts.setDefaultLanguage(voiceConfig.lang);
+      }
+
+      Tts.speak(description);
+      setIsSpeaking(true);
+    }
+
+    return () => {
+      Tts.stop();
+      setIsSpeaking(false);
+    };
+  }, [selectedArticle, isTextMode]);
+
+  // Helper functions
+const resolveArticleEndpoint = (tabKey: string) => {
+  // 🟢 Category tabs → call state-articles
+  if (!isNaN(Number(tabKey))) {
+    return { endpoint: "state-articles", category_id: Number(tabKey) };
+  }
+
+  // 🟣 Latest tab → global state-level feed
+  if (tabKey === "latest") {
+    return { endpoint: "state-articles" };
+  }
+
+  // 🟡 State tab → localized feed
+  if (tabKey === "state") {
+    return { endpoint: "articles" };
+  }
+
+  // Default fallback
+  return { endpoint: "state-articles" };
+};
+
+
+
+  const handleTabPress = async (key: string) => {
+  if (key === "sidebar") {
+    setSidebarVisible(true);
+    return;
+  }
+
+  if (!data.language_id || !data.state_id) return;
+

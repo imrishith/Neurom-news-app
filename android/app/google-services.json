@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "259810060771",
+    "project_id": "Neurom-e9b53",
+    "storage_bucket": "Neurom-e9b53.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259810060771:android:92afa49cb3666c123918d6",
+        "android_client_info": {
+          "package_name": "com.Neurom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPSiYj1bfbuj3_vBV9YYA0zk0t7bhnPcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

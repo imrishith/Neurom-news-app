@@ -1,0 +1,15 @@
+import {
+  responsiveHeight as rh,
+  responsiveWidth as rw,
+  responsiveFontSize as rf,
+} from 'react-native-responsive-dimensions';
+
+// 🖼️ Your Figma reference frame
+const BASE_WIDTH = 390;
+const BASE_HEIGHT = 844;
+
+// 🔁 Typed responsive helpers
+export const fw = (px: number): number => rw((px / BASE_WIDTH) * 100); // width
+export const fh = (px: number): number => rh((px / BASE_HEIGHT) * 100); // height
+export const ff = (px: number): number => rf(px / 7.5); // font size (adjust ratio if needed)
+
